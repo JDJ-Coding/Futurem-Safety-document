@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 안전보건 서류 체크리스트 PRO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;900&display=swap');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f1f5f9; }
+        
+        /* 슬라이더 스타일 커스텀 */
+        .slider { -webkit-appearance: none; width: 100%; height: 7px; background: #cbd5e1; outline: none; border-radius: 10px; transition: background 0.3s; }
+        .slider:hover { background: #94a3b8; }
+        .slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; background: #2563eb; cursor: pointer; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); transition: transform 0.2s; }
+        .slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        
+        /* 로직에 따른 행 흐림 처리 */
+        .skip-row { opacity: 0.35; filter: grayscale(1); background-color: #f8fafc; }
+        .skip-row:hover { opacity: 0.85; filter: grayscale(0.2); }
+        
+        /* 테이블 스크롤바 디자인 */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* 애니메이션 효과 */
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="text-slate-900 pb-20">
+
+    <div class="max-w-[1600px] mx-auto px-4 py-8 fade-in">
+        <!-- 헤더 섹션 -->
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 bg-white p-6 rounded-[2rem] shadow-sm border border-slate-200">
+            <div class="flex items-center gap-5">
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-4 rounded-2xl shadow-xl shadow-blue-100">
+                    <i class="fas fa-shield-halved text-white text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black tracking-tight text-slate-800">2026 정비성 투자 공사 안전보건 서류 마스터</h1>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="inline-block w-2 h-2 bg-blue-500 rounded-full"></span>
+                        <p class="text-slate-500 font-semibold text-xs md:text-sm uppercase tracking-wider">Smart Risk Assessment & TBM Integrated System</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <div class="bg-slate-100 px-4 py-2 rounded-xl border border-slate-200 flex items-center gap-3">
+                    <span class="flex h-3 w-3 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-slate-700 font-bold text-xs">V4.1 - Column Spacing Optimized</span>
+                </div>
+                <button onclick="window.print()" class="text-xs font-bold text-blue-600 hover:text-white hover:bg-blue-600 border border-blue-200 px-4 py-2 rounded-xl transition-all duration-300">
+                    <i class="fas fa-file-pdf mr-2"></i>PDF REPORT
+                </button>
+            </div>
+        </header>
+
+        <!-- 핵심 필터 패널 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <!-- 1. 공사 금액 -->
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-lg shadow-slate-200/50 border border-white hover:border-blue-100 transition-all">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                            <i class="fas fa-coins text-lg"></i>
+                        </div>
+                        <span class="font-bold text-slate-700">공사 금액 <span class="text-slate-400 text-xs font-medium ml-1">(VAT 별도)</span></span>
+                    </div>
+                </div>
+                
+                <div class="relative flex items-center mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100 focus-within:border-blue-400 focus-within:bg-white transition-all">
+                    <input type="number" id="budgetInput" value="150000000" step="10000" 
+                        class="w-full text-3xl font-black text-right pr-12 focus:outline-none bg-transparent text-slate-800">
+                    <span class="absolute right-6 text-lg font-bold text-slate-400">원</span>
+                </div>
+                
+                <input type="range" id="budgetSlider" min="0" max="1000000000" step="1000000" value="150000000" class="slider mb-3">
+                <div class="flex justify-between items-center text-[11px] font-bold text-slate-400">
+                    <span>0원</span>
+                    <span id="budgetTextReadable" class="text-blue-600 text-sm">1억 5,000만 원</span>
+                    <span>10억+</span>
+                </div>
+            </div>
+
+            <!-- 2. 공사 기간 -->
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-lg shadow-slate-200/50 border border-white hover:border-emerald-100 transition-all">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                            <i class="fas fa-calendar-alt text-lg"></i>
+                        </div>
+                        <span class="font-bold text-slate-700">공사 예정 기간</span>
+                    </div>
+                </div>
+
+                <div class="relative flex items-center mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100 focus-within:border-emerald-400 focus-within:bg-white transition-all">
+                    <input type="number" id="durationInput" value="45" min="1" max="365" 
+                        class="w-full text-3xl font-black text-right pr-12 focus:outline-none bg-transparent text-emerald-800">
+                    <span class="absolute right-6 text-lg font-bold text-slate-400">일</span>
+                </div>
+
+                <input type="range" id="durationSlider" min="1" max="180" step="1" value="45" class="slider mb-3">
+                <div class="flex justify-between items-center text-[11px] font-bold text-slate-400">
+                    <span>1일</span>
+                    <span id="durationTextReadable" class="text-emerald-600 text-sm">45일 (약 1.5개월)</span>
+                    <span>180일+</span>
+                </div>
+            </div>
+
+            <!-- 3. 검색 및 필터 -->
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-lg shadow-slate-200/50 border border-white">
+                <div class="flex items-center gap-3 mb-6 text-slate-700 font-bold">
+                    <div class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <span>문서 통합 검색</span>
+                </div>
+                <div class="relative group">
+                    <input type="text" id="searchInput" placeholder="서류명, 법령, 특이사항 검색..." 
+                        class="w-full bg-slate-100 border-2 border-transparent p-4 pl-12 rounded-2xl focus:outline-none focus:border-blue-500 focus:bg-white text-sm font-semibold transition-all">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500"></i>
+                </div>
+                <div class="mt-4 flex justify-end">
+                    <button onclick="resetFilters()" class="text-xs font-bold text-slate-400 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-redo-alt"></i>조건 초기화
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 메인 테이블 영역 -->
+        <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="p-6 bg-slate-50/50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <h2 class="font-black text-slate-700 text-lg">마스터 서류 현황</h2>
+                    <div class="bg-blue-600 text-white text-[11px] font-black px-3 py-1 rounded-full shadow-lg shadow-blue-200" id="totalCount">0건</div>
+                </div>
+                <div class="flex gap-2">
+                    <div class="flex items-center gap-4 text-[11px] font-bold text-slate-400 mr-4">
+                        <span class="flex items-center gap-1"><i class="fas fa-check-circle text-blue-500"></i> 필수</span>
+                        <span class="flex items-center gap-1"><i class="fas fa-minus-circle text-slate-300"></i> 면제대상</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left border-collapse min-w-[1000px] table-fixed">
+                    <thead>
+                        <tr class="bg-white border-b border-slate-200">
+                            <!-- 컬럼 간 간격을 줄이기 위해 너비 재조정 (px-3 사용) -->
+                            <th class="px-4 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest w-[80px]">구분</th>
+                            <th class="px-4 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest w-[200px]">서류 종류 / 상세내용</th>
+                            <th class="px-4 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center w-[85px]">필수여부</th>
+                            <th class="px-4 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest w-[200px]">작업 가이드</th>
+                            <th class="px-4 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest w-[160px]">면제 조건</th>
+                            <th class="px-4 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest w-[160px]">특이사항</th>
+                            <th class="px-4 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest w-[110px]">법적 근거</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentTableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 29건 전체 데이터 유지
+        const docData = [
+            { step: '선정/법적', name: '안전보건 수준평가서', desc: '수급업체 역량 사전 평가', req: '●', exempt: '면제 불가', guide: '자사 평가 양식', specific: '-', law: '중대재해처벌법', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '선정/법적', name: '공사 안전보건대장', desc: '발주자 직접 작성 지침', req: '○', exempt: '5억 미만 건설공사 면제', guide: '기획/설계/공사 단계별 작성', specific: '-', law: '산안법 제67조', minBudget: 500000000, minDays: 0, logicType: 'budget_min' },
+            { step: '선정/법적', name: '재해예방 기술지도', desc: '주기적 안전 지도 계약', req: '○', exempt: '1억 미만 또는 1개월 미만 면제', guide: '기술지도기관 협약서/보고서', specific: '전기·소방 단독공사 면제', law: '산안법 제73조', minBudget: 100000000, minDays: 30, logicType: 'budget_and_days' },
+            { step: '시공계획', name: '시공계획서(본문)', desc: '공법/인력/장비 총괄', req: '●', exempt: '2천만 미만 & 1주 이내 간소화', guide: 'PDF/PPT 보고서 형식', specific: '공사개요, 조직도 포함', law: '-', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '시공계획', name: '세부공정표(WBS)', desc: '일자별 시공 투입 일정', req: '●', exempt: '2천만 미만 시 일정표 대체', guide: '엑셀/바차트(Bar-chart)', specific: '정전/단수 시간 명시', law: '-', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '시공계획', name: '위험성평가서(RA)', desc: '작업별 위험 도출 및 대책', req: '●', exempt: '면제 불가', guide: '공정별 위험요인 리스트', specific: '배관: 누출, 전기: 감전', law: '산안법 제36조', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '시공계획', name: '인허가 계획서', desc: '법적 신고 및 허가 일정', req: '○', exempt: '법적 신고 대상 아닐 시 면제', guide: '신고서 및 허가증 사본', specific: '대기/공작물/고압가스 등', law: '자사 관리 기준', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '시공계획', name: 'LOTO 계획서', desc: '에너지 차단 및 격리 절차', req: '○', exempt: '에너지 차단 작업 없을 시 면제', guide: '잠금 지점 및 절차서', specific: '판넬/밸브 잠금 지점 명시', law: '에너지 차단 표준', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '시공계획', name: '고위험작업계획서', desc: '화재/밀폐/고소/중량물', req: '○', exempt: '해당 작업 없을 시 면제', guide: '상세 안전 대책서', specific: '탱크 내부: 밀폐공간 대책', law: '자사 안전 표준', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '시공계획', name: '용접 절차서(WPS)', desc: '용접 품질 및 안전 기준', req: '○', exempt: '용접 작업이 없는 경우 면제', guide: '용접 방법/재질 명시', specific: '배관/압력용기 용접 시 필수', law: '품질 확인', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '시공계획', name: '중량물 취급 계획서', desc: '1톤 이상 양중 안전 계획', req: '○', exempt: '1톤 미만 수동 양중 시 면제', guide: '양중 경로 및 제원표', specific: '탱크/판넬 인양 시 필수', law: '산안법 기준', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '착공계', name: '착공 신고서', desc: '공사 시작 공식 보고', req: '●', exempt: '면제 불가', guide: '자사 표준 양식', specific: '-', law: '-', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '착공계', name: '현장대리인계', desc: '현장 책임자 지정', req: '●', exempt: '면제 불가', guide: '선임서 및 개인정보 동의서', specific: '-', law: '-', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '착공계', name: '대리인 자격 증빙', desc: '기술자 보유 및 소속 확인', req: '●', exempt: '면제 불가', guide: '협회 증명서 및 사본', specific: '배관/전기/기계 분야 확인', law: '-', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '착공계', name: '공사업 등록증 사본', desc: '법적 공사 면허 보유 확인', req: '●', exempt: '1,500만 미만 경미 공사 면제', guide: '유효기간 내 면허증 사본', specific: '기계설비/전기/소방 면허', law: '건산법 등', minBudget: 15000000, minDays: 0, logicType: 'budget_min' },
+            { step: '착공계', name: '보험 가입 증명', desc: '산재/고용보험 가입 확인', req: '●', exempt: '2,000만 & 1개월 미만 면제', guide: '사업장별 가입 확인서', specific: '1개월 이상은 금액 무관 가입', law: '고용산재보험법', minBudget: 20000000, minDays: 30, logicType: 'or_check' },
+            { step: '착공계', name: '안전관리비 계획서', desc: '안전 예산 집행 계획', req: '●', exempt: '2,000만 미만 건설공사 면제', guide: '산출 내역서 및 사용 계획', specific: '-', law: '산안법 제72조', minBudget: 20000000, minDays: 0, logicType: 'budget_min' },
+            { step: '안전/보건', name: '유해물질 도급신고', desc: '화학물질 취급 공정 신고', req: '○', exempt: '화학물질 미취급 시 면제', guide: '환경청 신고 필증', specific: '양극재/음극재 공정 필수', law: '화학물질관리법', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '안전/보건', name: '취급자 교육증(16h)', desc: '취급 근로자 법정 교육', req: '○', exempt: '화학물질 미노출 시 면제', guide: '수료증 사본', specific: '온/오프라인 교육 구성', law: '화학물질관리법', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '안전/보건', name: 'MSDS 교육 자료', desc: '물질안전보건자료 비치', req: '●', exempt: '화학물질 미사용 시 면제', guide: '교육 기록 및 서명', specific: '오일/세척제/방청제 포함', law: '산안법 제110조', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '안전/보건', name: '기초안전교육 이수증', desc: '건설업 기본 안전 교육', req: '●', exempt: '면제 불가 (작업자 전원)', guide: '이수증 카드 사본', specific: '상용/일용직 전원 필수', law: '산안법 제31조', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '안전/보건', name: '건강검진 결과서', desc: '배치전/특수/일반 검진', req: '○', exempt: '1개월 미만 단기 작업자 면제', guide: '검진기관 판정 결과서', specific: '50대 이상 안심건강인증', law: '산안법 기준', minBudget: 0, minDays: 30, logicType: 'days_min' },
+            { step: '현장수행', name: 'TBM 기록 및 사진', desc: '작업 전 위험 전파 기록', req: '●', exempt: '면제 불가', guide: '회의록 및 현장 사진', specific: '익일 작업 및 위험 공유', law: '자사 관리 기준', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '현장수행', name: '안전작업허가서(PTW)', desc: '당일 작업 발주처 승인', req: '●', exempt: '면제 불가 (매일 발행)', guide: '자사 승인 시스템/양식', specific: '화기/밀폐/정전 분류 승인', law: '자사 규정', minBudget: 0, minDays: 0, logicType: 'always' },
+            { step: '준공/완료', name: '압력용기 검사증', desc: '법적 안전검사 합격증', req: '○', exempt: '대상 설비가 아닐 시 면제', guide: '공단/공사 합격증', specific: '압력탱크 신규/변경 시 필수', law: '고압가스/산안법', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '준공/완료', name: '비파괴검사 보고서', desc: '용접부 내부 결함 증빙', req: '○', exempt: '용접 부위 없는 경우 면제', guide: '전문업체 성적서(RT/UT)', specific: '배관/탱크 용접부 필수', law: '-', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '준공/완료', name: '내압시험 성적서', desc: '기밀/수압 성능 확인', req: '○', exempt: '단순 구조물 면제', guide: '시험 데이터 및 사진', specific: '배관/탱크 시운전 전 필수', law: '자사 검사 표준', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '준공/완료', name: '절연저항 측정 기록', desc: '전기 설비 절연 상태', req: '○', exempt: '비전기 공사 시 면제', guide: '측정 데이터 시트', specific: '판넬/케이블 메거값', law: '전기사업법 기준', minBudget: 0, minDays: 0, logicType: 'manual' },
+            { step: '준공/완료', name: '준공 보고서 및 사진', desc: '공사 완료 총괄 보고', req: '●', exempt: '면제 불가', guide: '시공 전/중/후 사진첩', specific: '매립 부위 및 내부 사진', law: '-', minBudget: 0, minDays: 0, logicType: 'always' }
+        ];
+
+        // 색상 맵핑
+        const stepColors = {
+            '선정/법적': 'bg-rose-50 text-rose-600 border-rose-100',
+            '시공계획': 'bg-blue-50 text-blue-600 border-blue-100',
+            '착공계': 'bg-amber-50 text-amber-600 border-amber-100',
+            '안전/보건': 'bg-emerald-50 text-emerald-600 border-emerald-100',
+            '현장수행': 'bg-indigo-50 text-indigo-600 border-indigo-100',
+            '준공/완료': 'bg-slate-50 text-slate-600 border-slate-100'
+        };
+
+        const budgetSlider = document.getElementById('budgetSlider');
+        const budgetInput = document.getElementById('budgetInput');
+        const budgetTextReadable = document.getElementById('budgetTextReadable');
+        const durationSlider = document.getElementById('durationSlider');
+        const durationInput = document.getElementById('durationInput');
+        const durationTextReadable = document.getElementById('durationTextReadable');
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('documentTableBody');
+        const totalCountEl = document.getElementById('totalCount');
+
+        function formatBudget(val) {
+            if (val >= 100000000) return (val / 100000000).toFixed(2) + '억 원';
+            return (val / 10000).toLocaleString() + '만 원';
+        }
+
+        function formatDuration(val) {
+            return val >= 30 ? `${val}일 (약 ${(val/30).toFixed(1)}개월)` : `${val}일`;
+        }
+
+        function syncAndUpdate(source) {
+            let budgetVal = parseInt(budgetInput.value) || 0;
+            let durationVal = parseInt(durationInput.value) || 0;
+
+            if (source === 'budgetSlider') { budgetVal = parseInt(budgetSlider.value); budgetInput.value = budgetVal; }
+            else if (source === 'budgetInput') { budgetSlider.value = Math.min(budgetVal, 1000000000); }
+            else if (source === 'durationSlider') { durationVal = parseInt(durationSlider.value); durationInput.value = durationVal; }
+            else if (source === 'durationInput') { durationSlider.value = Math.min(durationVal, 180); }
+
+            budgetTextReadable.innerText = formatBudget(budgetVal);
+            durationTextReadable.innerText = formatDuration(durationVal);
+            renderTable(budgetVal, durationVal);
+        }
+
+        function renderTable(budget, duration) {
+            const query = searchInput.value.toLowerCase();
+            tableBody.innerHTML = '';
+            let count = 0;
+
+            docData.forEach(item => {
+                let active = true;
+                if (item.logicType === 'budget_min') active = budget >= item.minBudget;
+                else if (item.logicType === 'budget_and_days') active = (budget >= item.minBudget && duration >= item.minDays);
+                else if (item.logicType === 'days_min') active = duration >= item.minDays;
+                else if (item.logicType === 'or_check') active = (budget >= item.minBudget || duration >= item.minDays);
+
+                if (query && !item.name.toLowerCase().includes(query) && !item.step.toLowerCase().includes(query) && !item.specific.toLowerCase().includes(query)) return;
+
+                const row = document.createElement('tr');
+                row.className = `group transition-all duration-300 ${!active ? 'skip-row' : 'hover:bg-slate-50'}`;
+                
+                const colorClass = stepColors[item.step] || 'bg-slate-50 text-slate-500 border-slate-100';
+
+                row.innerHTML = `
+                    <td class="px-4 py-4">
+                        <span class="px-2 py-0.5 rounded-lg text-[10px] font-black border ${colorClass} shadow-sm whitespace-nowrap">${item.step}</span>
+                    </td>
+                    <td class="px-4 py-4">
+                        <div class="font-bold text-slate-800 text-[12px] group-hover:text-blue-600 transition-colors">${item.name}</div>
+                        <div class="text-[10px] text-slate-400 mt-1 font-medium leading-tight">${item.desc}</div>
+                    </td>
+                    <td class="px-4 py-4 text-center">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="fas ${active ? 'fa-check-circle text-blue-500' : 'fa-minus-circle text-slate-300'} text-lg"></i>
+                            <span class="text-[9px] mt-1 font-bold ${active ? 'text-blue-500' : 'text-slate-400'}">${active ? '필수' : '면제'}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 text-[11px] text-slate-600 font-medium leading-relaxed">${item.guide}</td>
+                    <td class="px-4 py-4 text-[11px] ${!active && item.exempt !== '면제 불가' ? 'text-rose-500 font-black' : 'text-slate-500 font-medium'} leading-relaxed">${item.exempt}</td>
+                    <td class="px-4 py-4 text-[11px] text-slate-400 italic font-medium leading-relaxed">${item.specific !== '-' ? item.specific : '-'}</td>
+                    <td class="px-4 py-4">
+                        <div class="text-[10px] text-slate-400 font-mono bg-slate-50 px-2 py-1 rounded border border-slate-100 inline-block">${item.law}</div>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+                count++;
+            });
+            totalCountEl.innerText = count + '건';
+        }
+
+        function resetFilters() {
+            searchInput.value = '';
+            budgetInput.value = 150000000;
+            durationInput.value = 45;
+            syncAndUpdate('budgetInput');
+            syncAndUpdate('durationInput');
+        }
+
+        budgetSlider.addEventListener('input', () => syncAndUpdate('budgetSlider'));
+        budgetInput.addEventListener('input', () => syncAndUpdate('budgetInput'));
+        durationSlider.addEventListener('input', () => syncAndUpdate('durationSlider'));
+        durationInput.addEventListener('input', () => syncAndUpdate('durationInput'));
+        searchInput.addEventListener('input', () => syncAndUpdate());
+
+        // 초기 실행
+        syncAndUpdate('init');
+    </script>
+</body>
+</html>
