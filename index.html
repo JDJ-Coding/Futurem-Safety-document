@@ -119,8 +119,35 @@
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: white;
             padding: 40px 30px;
-            text-align: center;
             border-bottom: 4px solid var(--accent-blue);
+            position: relative;
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-left {
+            flex: 1;
+            text-align: center;
+            width: 100%;
+        }
+
+        .header-right {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 600;
+            white-space: nowrap;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
         }
 
         .header h1 {
@@ -673,9 +700,12 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>📋 2026년 안전&환경 서류 체크리스트</h1>
-            <p>원도급 업체 대상 (발주처 기준 작성)</p>
-            <p id="updateDate">최종 업데이트: 2026년 1월 23일</p>
+            <div class="header-left">
+                <h1>📋 2026년 안전&환경 서류 체크리스트</h1>
+                <p>원도급 업체 대상 (발주처 기준 작성)</p>
+                <p id="updateDate">최종 업데이트: 2026년 1월 23일</p>
+            </div>
+            <div class="header-right">🏢 설비기획그룹 배포</div>
         </div>
 
         <!-- Input Section -->
