@@ -599,6 +599,22 @@
             .section-title {
                 page-break-after: avoid;
             }
+
+            /* Print 모드에서 모든 step-content 표시 */
+            .step-content {
+                display: block !important;
+                page-break-after: always;
+            }
+
+            /* Print 모드에서 step-nav 숨김 */
+            .step-nav {
+                display: none !important;
+            }
+
+            /* input-section도 한 번만 표시 */
+            .input-section {
+                page-break-after: always;
+            }
         }
 
         /* Responsive */
@@ -706,7 +722,7 @@
                 <p>원도급 업체 대상 (발주처 기준 작성)</p>
                 <p id="updateDate">최종 업데이트: 2026년 1월 24일</p>
             </div>
-            <div class="header-right">🏢 설비기획그룹 배포</div>
+            <div class="header-right" style="font-size: 14px;">🏢 설비기획그룹 제작</div>
         </div>
 
         <!-- Input Section -->
@@ -731,7 +747,7 @@
                 <div class="input-group">
                     <label for="contractPeriod">⏱️ 공사기간</label>
                     <div class="slider-container">
-                        <input type="range" id="contractPeriod" min="0.5" max="36" value="12" step="0.1">
+                        <input type="range" id="contractPeriod" min="0.5" max="36" value="12" step="0.5">
                         <input type="text" id="contractPeriodInput" class="number-input" value="12" placeholder="기간" inputmode="decimal">
                         <div class="value-display">개월</div>
                     </div>
@@ -743,9 +759,8 @@
             </div>
 
             <div class="button-group">
-                <button class="btn-primary" id="updateBtn" onclick="updateTable()">📊 체크리스트 업데이트</button>
-                <button class="btn-print" onclick="printPage()">🖨️ 인쇄</button>
-                <button class="btn-pdf" onclick="downloadPDF()">📥 PDF 저장</button>
+                <button class="btn-primary" id="updateBtn" onclick="updateAndNotify()">📊 체크리스트 업데이트</button>
+                <button class="btn-print" onclick="printPage()">🖨️ 인쇄&PDF저장</button>
                 <button class="btn-reset" onclick="resetForm()">🔄 초기화</button>
             </div>
         </div>
@@ -922,6 +937,31 @@
             return { text: "확인 필요", class: "check" };
         }
 
+        // 렌더링 캐시 추가
+        const renderedSteps = {};
+
+        function generateAllPages() {
+            const amount = parseFloat(document.getElementById("contractAmount").value);
+            const period = parseFloat(document.getElementById("contractPeriod").value);
+
+            // 모든 step 렌더링
+            for (let i = 1; i <= 4; i++) {
+                renderStep(i);
+            }
+
+            // 첫 번째 탭만 시각적으로 활성화 (다른 step 콘텐츠는 DOM에 유지)
+            for (let i = 1; i <= 4; i++) {
+                if (i === 1) {
+                    document.getElementById(`step${i}`).classList.add('active');
+                    document.querySelectorAll('.step-tab')[i-1].classList.add('active');
+                } else {
+                    // active 클래스는 제거하되, innerHTML은 유지됨
+                    document.getElementById(`step${i}`).classList.remove('active');
+                    document.querySelectorAll('.step-tab')[i-1].classList.remove('active');
+                }
+            }
+        }
+
         function switchStep(step) {
             // Hide all steps
             for (let i = 1; i <= 4; i++) {
@@ -944,6 +984,12 @@
             
             const stepData = checklistData[step];
             if (!stepData) return;
+            
+            // 이미 렌더링된 step이면 업데이트만 수행
+            if (renderedSteps[step]) {
+                updateStatusBadges(step, amount, period);
+                return;
+            }
             
             let html = `<div class="section-title">${stepData.title}</div>`;
             html += `<table>
@@ -970,13 +1016,12 @@
                     refBtn = `<button class="reference-btn" onclick="openModal('${item.reference}')">📚</button>`;
                 }
 
-                // 아이템 이름에 법적근거 추가 (툴팁용)
                 const nameHtml = `<strong class="legal-tooltip" data-legal="${item.legal || ''}">${item.name}</strong>`;
 
                 html += `<tr>
                     <td>${index + 1}</td>
                     <td>${nameHtml}</td>
-                    <td><span class="status-badge ${badgeClass}">${badgeText}</span></td>
+                    <td><span class="status-badge ${badgeClass}" data-step="${step}" data-item="${index}">${badgeText}</span></td>
                     <td>${(item.description || '').replace(/\n/g, '<br>')}</td>
                     <td>${(item.exemption || '').replace(/\n/g, '<br>')}</td>
                     <td>${(item.remark || '').replace(/\n/g, '<br>')}</td>
@@ -986,6 +1031,21 @@
 
             html += `</tbody></table>`;
             stepContainer.innerHTML = html;
+            renderedSteps[step] = true;
+        }
+
+        function updateStatusBadges(step, amount, period) {
+            const stepData = checklistData[step];
+            const badges = document.querySelectorAll(`.status-badge[data-step="${step}"]`);
+            
+            badges.forEach((badge, index) => {
+                const item = stepData.items[index];
+                const statusDisplay = getStatusDisplay(item.status, item, amount, period);
+                badge.textContent = statusDisplay.text;
+                badge.className = `status-badge ${statusDisplay.class}`;
+                badge.setAttribute('data-step', step);
+                badge.setAttribute('data-item', index);
+            });
         }
 
         function updateAllSteps() {
@@ -1030,7 +1090,15 @@
         }
 
         function printPage() {
-            window.print();
+            // 1. 인쇄 전, 현재 설정된 금액/기간에 맞춰 모든 탭(1~4)의 내용을 강제로 생성합니다.
+            // 기존에 작성하신 generateAllPages() 함수가 이 역할을 완벽히 수행합니다.
+            generateAllPages();
+
+            // 2. 브라우저가 내용을 그릴 시간을 아주 잠깐(0.5초) 준 뒤 인쇄 창을 띄웁니다.
+            // (내용이 많으면 그리는 데 시간이 걸릴 수 있어 안전장치를 두는 것입니다)
+            setTimeout(() => {
+                window.print();
+            }, 500);
         }
 
         function downloadPDF() {
@@ -1085,9 +1153,7 @@
         function validateAndCleanInput(type) {
             if (type === 'amount') {
                 let input = document.getElementById("contractAmountInput");
-                // 숫자와 소수점만 허용
                 input.value = input.value.replace(/[^0-9.]/g, '');
-                // 소수점이 2개 이상이면 마지막 하나만 유지
                 if ((input.value.match(/\./g) || []).length > 1) {
                     let parts = input.value.split('.');
                     input.value = parts[0] + '.' + parts.slice(1).join('');
@@ -1095,15 +1161,12 @@
                 
                 let val = parseFloat(input.value) || 0;
                 val = Math.max(0, Math.min(100, val));
-                // 0.1 단위로 반올림 (소수점 입력 지원)
                 val = Math.round(val * 10) / 10;
                 document.getElementById("contractAmount").value = val;
                 document.getElementById("contractAmountInput").value = val;
             } else if (type === 'period') {
                 let input = document.getElementById("contractPeriodInput");
-                // 숫자와 소수점만 허용
                 input.value = input.value.replace(/[^0-9.]/g, '');
-                // 소수점이 2개 이상이면 마지막 하나만 유지
                 if ((input.value.match(/\./g) || []).length > 1) {
                     let parts = input.value.split('.');
                     input.value = parts[0] + '.' + parts.slice(1).join('');
@@ -1111,8 +1174,8 @@
                 
                 let val = parseFloat(input.value) || 0.5;
                 val = Math.max(0.5, Math.min(36, val));
-                // 0.1 단위로 반올림
-                val = Math.round(val * 10) / 10;
+                // 0.5 단위로 반올림
+                val = Math.round(val * 2) / 2;
                 document.getElementById("contractPeriod").value = val;
                 document.getElementById("contractPeriodInput").value = val;
             }
@@ -1158,6 +1221,23 @@
                 modal.style.display = "none";
             }
         };
+
+// === 이 부분을 추가하세요 ===
+        function updateAndNotify() {
+            const btn = document.getElementById("updateBtn");
+            btn.classList.add("loading");
+            btn.disabled = true;
+            btn.innerHTML = "업데이트 중...";
+
+            setTimeout(() => {
+                generateAllPages();
+                btn.classList.remove("loading");
+                btn.disabled = false;
+                btn.innerHTML = "📊 체크리스트 업데이트";
+                alert('업데이트 되었습니다.\n제출 서류를 확인해주세요.');
+            }, 500);
+        }
+        // ============================
 
         // Initialize
         document.getElementById("contractAmount").addEventListener("input", updateSliderValues);
