@@ -147,6 +147,32 @@ function getStatusDisplay(status, item, amount, period) {
 // 렌더링 캐시 추가
 const renderedSteps = {};
 
+// 각 단계별 필수 서류 개수 계산
+function calculateRequiredDocuments(step, amount, period) {
+    const stepData = checklistData[step];
+    if (!stepData) return 0;
+    
+    let count = 0;
+    stepData.items.forEach(item => {
+        const statusDisplay = getStatusDisplay(item.status, item, amount, period);
+        if (statusDisplay.class === "required") {
+            count++;
+        }
+    });
+    return count;
+}
+
+// 모든 단계의 필수 서류 개수 업데이트
+function updateDocumentCounts(amount, period) {
+    for (let i = 1; i <= 4; i++) {
+        const count = calculateRequiredDocuments(i, amount, period);
+        const countElement = document.getElementById(`count${i}`);
+        if (countElement) {
+            countElement.textContent = `(필수 ${count}개)`;
+        }
+    }
+}
+
 function generateAllPages() {
     const amount = parseFloat(document.getElementById("contractAmount").value);
     const period = parseFloat(document.getElementById("contractPeriod").value);
@@ -440,7 +466,12 @@ function updateAndNotify() {
     btn.innerHTML = "업데이트 중...";
 
     setTimeout(() => {
+        const amount = parseFloat(document.getElementById("contractAmount").value);
+        const period = parseFloat(document.getElementById("contractPeriod").value);
+        
         generateAllPages();
+        updateDocumentCounts(amount, period);
+        
         btn.classList.remove("loading");
         btn.disabled = false;
         btn.innerHTML = "📊 체크리스트 업데이트";
