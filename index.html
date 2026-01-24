@@ -2,29 +2,53 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>2026 안전&환경 체크리스트</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026년 안전&환경 서류 체크리스트</title>
+    
+    <!-- 외부 파일 연결: 경로가 정확한지, 파일이 같은 폴더에 있는지 확인 필수 -->
     <link rel="stylesheet" href="style.css">
     <script src="data.js"></script>
+    
+    <!-- PDF 저장용 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    
     <div class="container">
         <div class="header">
             <h1>📋 2026년 안전&환경 서류 체크리스트</h1>
+            <p>설비기획그룹 프로젝트 관리 시스템</p>
         </div>
 
         <div class="input-section">
-            <button onclick="updateAll()">📊 체크리스트 업데이트</button>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>💰 공사금액 (억원)</label>
+                    <input type="range" id="contractAmount" min="0" max="100" value="50" step="1">
+                    <input type="number" id="contractAmountInput" value="50" style="width: 60px; margin-left:10px;">
+                    <span id="amountDisplay">50 억원</span>
+                </div>
+                <div class="input-group">
+                    <label>⏱️ 공사기간 (개월)</label>
+                    <input type="range" id="contractPeriod" min="0" max="36" value="12" step="1">
+                    <input type="number" id="contractPeriodInput" value="12" style="width: 60px; margin-left:10px;">
+                    <span id="periodDisplay">12 개월</span>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; text-align: center;">
+                <button id="updateBtn" onclick="updateAndNotify()" style="background:var(--secondary-blue); color:white; padding:12px 30px; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:1rem; transition:all 0.3s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">📊 체크리스트 업데이트</button>
+                <button onclick="window.print()" style="background:var(--primary-blue); color:white; padding:12px 30px; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:1rem; margin-left:15px; transition:all 0.3s; box-shadow: 0 4px 15px rgba(30, 58, 138, 0.4);">🖨️ PDF 저장</button>
+            </div>
         </div>
 
-        <div class="step-nav">
+        <div class="step-nav" id="stepNav">
             <button class="step-tab active" onclick="switchStep(1)">Ⅰ. 안전&환경</button>
             <button class="step-tab" onclick="switchStep(2)">Ⅱ. 시공계획서</button>
             <button class="step-tab" onclick="switchStep(3)">Ⅲ. 착공계</button>
-            <button class="step-tab" onclick="switchStep(4)">Ⅳ. 착공 당일</button>
+            <button class="step-tab" onclick="switchStep(4)">Ⅳ. 착공 시</button>
         </div>
 
-        <div id="step-container">
+        <div class="table-section">
             <div id="step1" class="step-content active"></div>
             <div id="step2" class="step-content"></div>
             <div id="step3" class="step-content"></div>
@@ -32,42 +56,128 @@
         </div>
     </div>
 
+    <!-- 참고표 모달 -->
+    <div id="referenceModal" class="modal">
+        <div class="modal-content">
+            <div style="background:var(--primary-blue); color:white; padding:15px 20px; display:flex; justify-content:space-between; align-items:center;">
+                <h2 id="modalTitle" style="font-size:1.2rem;">참고 기준</h2>
+                <span onclick="document.getElementById('referenceModal').style.display='none'" style="cursor:pointer; font-size:1.5rem;">&times;</span>
+            </div>
+            <div id="modalBody" style="padding:20px;"></div>
+        </div>
+    </div>
+
     <script>
+        // === ReferenceError 방지를 위한 데이터 체크 로직 ===
+        function checkDataLoaded() {
+            if (typeof checklistData === 'undefined') {
+                console.error("데이터 파일(data.js)을 로드할 수 없습니다. 파일이 동일한 경로에 있는지 확인하세요.");
+                document.body.innerHTML = `
+                    <div style="padding: 50px; text-align: center; font-family: sans-serif;">
+                        <h2 style="color: #ef4444;">⚠️ 데이터 로드 오류</h2>
+                        <p>'data.js' 파일을 찾을 수 없습니다.</p>
+                        <p style="font-size: 0.9rem; color: #666;">index.html과 data.js 파일이 같은 폴더에 있는지 확인해 주세요.</p>
+                    </div>
+                `;
+                return false;
+            }
+            return true;
+        }
+
+        function updateSliderValues() {
+            const amount = document.getElementById("contractAmount").value;
+            const period = document.getElementById("contractPeriod").value;
+            document.getElementById("amountDisplay").innerText = amount + " 억원";
+            document.getElementById("periodDisplay").innerText = period + " 개월";
+            document.getElementById("contractAmountInput").value = amount;
+            document.getElementById("contractPeriodInput").value = period;
+        }
+
         function switchStep(step) {
-            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.step-tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(`step${step}`).classList.add('active');
-            event.currentTarget.classList.add('active');
+            if (!checkDataLoaded()) return;
+            document.querySelectorAll(".step-content").forEach(c => c.classList.remove("active"));
+            document.querySelectorAll(".step-tab").forEach(t => t.classList.remove("active"));
+            document.getElementById(`step${step}`).classList.add("active");
+            document.querySelectorAll(".step-tab")[step-1].classList.add("active");
             renderStep(step);
         }
 
         function renderStep(step) {
+            if (!checkDataLoaded()) return;
+            
+            const amount = parseFloat(document.getElementById("contractAmount").value);
+            const period = parseFloat(document.getElementById("contractPeriod").value);
             const container = document.getElementById(`step${step}`);
             const data = checklistData[step];
-            let html = `<h3>${data.title}</h3><table><thead><tr>
-                <th>No.</th><th>서류 종류</th><th>필수 여부</th><th>설명</th><th>면제조건</th><th>특이사항</th>
-                </tr></thead><tbody>`;
-            
-            data.items.forEach((item, i) => {
-                const isRequired = item.status === "●"; // 간단한 로직 예시
+
+            if (!data) return;
+
+            let html = `<h2 style="color:var(--primary-blue); margin-bottom:20px; font-weight:800; border-left:5px solid var(--accent-blue); padding-left:15px;">${data.title}</h2>`;
+            html += `<table><thead><tr>
+                <th>No.</th><th>서류 종류</th><th>필수 여부</th><th>상세 설명</th><th>면제 조건</th><th>특이사항</th>
+            </tr></thead><tbody>`;
+
+            data.items.forEach((item, index) => {
+                const isRequired = (item.status === "●") || (amount >= item.baseAmount && period >= item.basePeriod);
                 html += `<tr>
-                    <td>${i+1}</td>
-                    <td>${item.name}</td>
-                    <td><span class="status-badge ${isRequired?'required':'exempt'}">${isRequired?'필수':'미해당'}</span></td>
-                    <td>${item.description}</td>
-                    <td>${item.exemption}</td>
-                    <td>${item.remark}</td>
+                    <td>${index + 1}</td>
+                    <td>
+                        <span style="display:block;">${item.name}</span>
+                        ${item.reference ? `<button onclick="openReference('${item.reference}')" style="font-size:10px; padding:2px 5px; cursor:pointer; margin-top:5px; background:white; border:1px solid #ddd; border-radius:3px;">🔍 ${item.reference}</button>` : ''}
+                    </td>
+                    <td><span class="status-badge ${isRequired ? 'required' : 'exempt'}">${isRequired ? '필수' : '미해당'}</span></td>
+                    <td>${item.description ? item.description.replace(/\n/g, '<br>') : ''}</td>
+                    <td>${item.exemption ? item.exemption.replace(/\n/g, '<br>') : ''}</td>
+                    <td style="color:#666;">${item.remark ? item.remark.replace(/\n/g, '<br>') : ''}</td>
                 </tr>`;
             });
-            container.innerHTML = html + `</tbody></table>`;
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
         }
 
-        function updateAll() {
-            [1,2,3,4].forEach(renderStep);
-            alert('업데이트 완료!');
+        function openReference(refName) {
+            if (typeof referenceData === 'undefined') return;
+            const ref = referenceData[refName];
+            if(!ref) return;
+            document.getElementById("modalTitle").innerText = ref.title;
+            let tableHtml = `<table style="font-size:12px;"><thead><tr>`;
+            ref.data[0].forEach(h => { tableHtml += `<th>${h}</th>`; });
+            tableHtml += `</tr></thead><tbody>`;
+            for(let i=1; i<ref.data.length; i++) {
+                tableHtml += `<tr>`;
+                ref.data[i].forEach(d => { tableHtml += `<td>${d}</td>`; });
+                tableHtml += `</tr>`;
+            }
+            tableHtml += `</tbody></table>`;
+            document.getElementById("modalBody").innerHTML = tableHtml;
+            document.getElementById("referenceModal").style.display = "block";
         }
 
-        window.onload = () => renderStep(1);
+        function updateAndNotify() {
+            if (!checkDataLoaded()) return;
+            const btn = document.getElementById("updateBtn");
+            btn.innerHTML = "업데이트 중...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                [1,2,3,4].forEach(renderStep);
+                btn.innerHTML = "📊 체크리스트 업데이트";
+                btn.disabled = false;
+                alert('업데이트 되었습니다.\n데이터를 확인해 주세요.');
+            }, 500);
+        }
+
+        // 초기화
+        document.getElementById("contractAmount").oninput = updateSliderValues;
+        document.getElementById("contractPeriod").oninput = updateSliderValues;
+        
+        window.onload = () => {
+            if (checkDataLoaded()) {
+                updateSliderValues();
+                renderStep(1);
+            }
+        };
     </script>
 </body>
 </html>

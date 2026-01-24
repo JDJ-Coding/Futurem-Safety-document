@@ -1,16 +1,33 @@
-/* style.css */
+/**
+ * 2026년 안전&환경 체크리스트 스타일 (style.css)
+ * 원본의 모든 디자인과 정렬 설정을 포함합니다.
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 :root {
     --primary-blue: #1e3a8a;
     --secondary-blue: #3b82f6;
     --accent-blue: #0ea5e9;
+    --success-green: #10b981;
+    --warning-red: #ef4444;
+    --neutral-gray: #6b7280;
+    --light-gray: #f3f4f6;
     --border-gray: #e5e7eb;
     --text-dark: #1f2937;
-    --light-gray: #f3f4f6;
+    --text-light: #6b7280;
 }
 
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f0f9ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    color: var(--text-dark);
+    line-height: 1.6;
+    min-height: 100vh;
     padding: 20px;
 }
 
@@ -19,77 +36,222 @@ body {
     margin: 0 auto;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    min-height: 100vh;
 }
 
-/* 헤더 스타일 */
+/* Header */
 .header {
-    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
     color: white;
-    padding: 30px;
+    padding: 40px;
     text-align: center;
+    position: relative;
+    border-bottom: 5px solid var(--accent-blue);
 }
 
-/* 입력 섹션 */
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Input Section */
 .input-section {
-    padding: 20px;
-    background: var(--light-gray);
+    padding: 30px;
+    background: white;
     border-bottom: 1px solid var(--border-gray);
 }
 
-/* 테이블 공통 */
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    align-items: center;
+}
+
+.input-group {
+    background: var(--light-gray);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border-gray);
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 700;
+    color: var(--primary-blue);
+    font-size: 0.95rem;
+}
+
+.input-group input[type="range"] {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.input-group span {
+    display: block;
+    text-align: right;
+    font-weight: 800;
+    color: var(--secondary-blue);
+    font-size: 1.2rem;
+}
+
+/* Table Area */
+.table-section {
+    padding: 30px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 30px;
+    background: white;
     table-layout: auto !important;
-    margin-top: 20px;
 }
 
 th {
     background: #f9fafb;
     border: 1px solid var(--border-gray);
-    padding: 12px;
-    text-align: center !important; /* 컬럼명 중앙 정렬 */
+    padding: 12px 10px;
+    font-size: 11px;
     font-weight: 700;
+    text-align: center !important;
+    color: var(--text-dark);
+    text-transform: uppercase;
 }
 
 td {
-    padding: 12px;
+    padding: 12px 10px;
     border: 1px solid var(--border-gray);
-    font-size: 13px;
+    font-size: 12.5px;
+    color: #333;
+    line-height: 1.5;
+    vertical-align: middle;
 }
 
-/* NO. 열 설정 */
+/* No. Column (Column 1) */
 td:first-child {
     text-align: center !important;
     font-weight: 700 !important;
     color: #000000 !important;
 }
 
-/* 필수 여부 열 너비 고정 */
-th:nth-child(3), td:nth-child(3) {
+/* Document Type Column (Column 2) */
+td:nth-child(2) {
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+/* Required Status Column (Column 3) */
+th:nth-child(3), 
+td:nth-child(3) {
     width: 75px !important;
     min-width: 75px !important;
+    max-width: 75px !important;
     text-align: center !important;
 }
 
 .status-badge {
     width: 62px !important;
-    display: inline-block;
-    padding: 4px 0;
-    font-size: 11px;
+    font-size: 11px !important;
+    padding: 4px 0 !important;
+    display: inline-block !important;
+    text-align: center !important;
     border-radius: 4px;
-    text-align: center;
+    font-weight: 700;
 }
 
-.status-badge.required { background: #dbeafe; color: var(--secondary-blue); border: 1px solid var(--secondary-blue); }
-.status-badge.exempt { background: #f3f4f6; color: var(--neutral-gray); border: 1px solid var(--border-gray); }
+.status-badge.required {
+    background: #dbeafe;
+    color: var(--secondary-blue);
+    border: 1px solid var(--secondary-blue);
+}
 
-/* 탭 스타일 */
-.step-nav { display: flex; background: var(--primary-blue); padding: 10px; gap: 10px; }
-.step-tab { padding: 10px 20px; color: white; cursor: pointer; border: none; background: rgba(255,255,255,0.1); }
-.step-tab.active { background: white; color: var(--primary-blue); font-weight: bold; }
+.status-badge.exempt {
+    background: #f3f4f6;
+    color: var(--neutral-gray);
+    border: 1px solid var(--border-gray);
+}
 
-.step-content { display: none; padding: 20px; }
-.step-content.active { display: block; }
+/* Step Navigation */
+.step-nav {
+    display: flex;
+    background: var(--primary-blue);
+    padding: 0 20px;
+    overflow-x: auto;
+}
+
+.step-tab {
+    padding: 15px 25px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+    background: none;
+    transition: all 0.3s;
+    white-space: nowrap;
+    border-bottom: 4px solid transparent;
+}
+
+.step-tab:hover {
+    color: white;
+}
+
+.step-tab.active {
+    color: white;
+    border-bottom: 4px solid var(--accent-blue);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.step-content {
+    display: none;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.step-content.active {
+    display: block;
+}
+
+/* Reference Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media print {
+    .input-section, .step-nav, .print-btn { display: none !important; }
+    .container { box-shadow: none; border: none; }
+    .step-content { display: block !important; page-break-after: always; }
+}
