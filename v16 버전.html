@@ -97,7 +97,7 @@
         }
 
         .number-input {
-            width: 80px !important;
+            width: 80px;
             padding: 8px 12px;
             border: 2px solid var(--border-gray);
             border-radius: 6px;
@@ -105,7 +105,6 @@
             font-weight: 600;
             text-align: center;
             transition: all 0.3s ease;
-            flex-shrink: 0;
         }
 
         .number-input:focus {
@@ -120,35 +119,8 @@
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: white;
             padding: 40px 30px;
+            text-align: center;
             border-bottom: 4px solid var(--accent-blue);
-            position: relative;
-            text-align: center;
-            min-height: 150px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .header-left {
-            flex: 1;
-            text-align: center;
-            width: 100%;
-        }
-
-        .header-right {
-            position: absolute;
-            top: 5px;
-            right: 3px;
-            display: flex;
-            align-items: center;
-            font-size: 16px;
-            font-weight: 600;
-            white-space: nowrap;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
         }
 
         .header h1 {
@@ -181,7 +153,6 @@
         .input-group {
             display: flex;
             flex-direction: column;
-            min-width: 0;
         }
 
         .input-group label {
@@ -212,18 +183,16 @@
             background: #f0f9ff;
         }
 
-        /* Slider Container (Fixed) */
         .slider-container {
             display: flex;
             align-items: center;
-            gap: 15px;
-            width: 100%;
+            gap: 10px;
+            flex: 1;
         }
 
         .slider-container input[type="range"] {
             flex: 1;
-            width: 100%;
-            min-width: 0;
+            min-width: 150px;
             height: 8px;
             border-radius: 4px;
             background: linear-gradient(to right, #dbeafe, #0ea5e9);
@@ -232,44 +201,43 @@
             appearance: none;
             padding: 0;
             margin: 0;
-            cursor: pointer;
+            width: 100%;
         }
 
         .slider-container input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: var(--accent-blue);
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(6, 182, 212, 0.4);
-            transition: transform 0.1s;
-            border: 2px solid white;
-            margin-top: -8px;
+            transition: all 0.2s;
+            border: none;
         }
 
         .slider-container input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-        }
-
-        .slider-container input[type="range"]::-webkit-slider-thumb:active {
-            transform: scale(1.15);
+            width: 26px;
+            height: 26px;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.6);
         }
 
         .slider-container input[type="range"]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border: 2px solid white;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: var(--accent-blue);
             cursor: pointer;
+            border: none;
             box-shadow: 0 2px 8px rgba(6, 182, 212, 0.4);
-            transition: transform 0.1s;
+            transition: all 0.2s;
         }
 
         .slider-container input[type="range"]::-moz-range-thumb:hover {
-            transform: scale(1.1);
+            width: 26px;
+            height: 26px;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.6);
         }
 
         .slider-container input[type="range"]::-moz-range-track {
@@ -284,12 +252,16 @@
         }
 
         .value-display {
-            min-width: 50px;
-            font-size: 14px;
+            min-width: 70px;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: 600;
-            color: var(--text-dark);
+            color: var(--accent-blue);
+            text-align: center;
             white-space: nowrap;
-            flex-shrink: 0;
         }
 
         /* Button Group */
@@ -351,25 +323,15 @@
         }
 
         /* Status Badges */
-        /* 웹 화면용: 필수 여부 칸 너비 고정 */
-        th:nth-child(3), 
-        td:nth-child(3) {
-            width: 75px !important;
-            min-width: 75px !important;
-            max-width: 75px !important;
-            padding: 12px 0 !important;
-            text-align: center !important;
-        }
-
-        /* 배지 크기 및 정렬 */
         .status-badge {
-            width: 62px !important;
-            min-width: 62px !important;
-            font-size: 11px !important;
-            padding: 4px 0 !important;
-            display: inline-block !important;
-            box-sizing: border-box !important;
-            text-align: center !important;
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            min-width: 70px;
+            letter-spacing: 0.5px;
         }
 
         .status-badge.required {
@@ -406,7 +368,6 @@
             border-left: 4px solid var(--accent-blue);
         }
 
-        /* 테이블 기본 레이아웃 설정 */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -415,25 +376,21 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             border-radius: 8px;
             overflow: hidden;
-            /* 너비 고정을 위해 auto로 설정 */
-            table-layout: auto !important;
+            table-layout: fixed;
         }
 
-/* 표 헤더(컬럼 이름) 정렬 설정 */
         th {
             background: #f9fafb;
             border: 1px solid var(--border-gray);
             padding: 12px 10px;
             font-size: 11px;
             font-weight: 700;
-            /* 기존 left에서 center로 변경하여 중앙 정렬 적용 */
-            text-align: center !important; 
+            text-align: left;
             color: var(--text-dark);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             word-break: keep-all;
         }
-
 
         td {
             padding: 12px 10px;
@@ -446,13 +403,6 @@
 
         tr:hover {
             background: #f9fafb;
-        }
-
-/* No. 숫자가 들어가는 첫 번째 칸 설정 */
-        td:first-child {
-            text-align: center !important;
-            font-weight: 700 !important;
-            color: #000000 !important; /* 가독성을 위해 강조색 추가 선택사항 */
         }
 
         /* Tooltip for legal basis */
@@ -587,65 +537,42 @@
             background: #f0f9ff;
         }
 
-        /* === 인쇄 및 PDF 저장 전용 스타일 시작 === */
-/* === 인쇄 및 PDF 저장 전용 스타일 시작 === */
+        /* Print Styles */
         @media print {
-            * { 
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important; 
+            body {
+                background: white;
+                padding: 0;
             }
 
-            body { background: white !important; padding: 0 !important; }
-            .container { box-shadow: none !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; }
-
-            /* 입력창 가로 2열 고정 */
-            .input-grid {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 20px !important;
-                width: 100% !important;
+            .container {
+                box-shadow: none;
+                max-width: 100%;
             }
 
-            /* 입력 섹션 후 페이지 넘김 */
-            .input-section {
-                page-break-after: always !important;
-                border-bottom: none !important;
+            .button-group,
+            .input-section .button-group {
+                display: none;
             }
 
-            /* [핵심] 표의 3번째 칸(필수 여부) 너비 고정 */
-            th:nth-child(3), 
-            td:nth-child(3) {
-                width: 55px !important;
-                min-width: 55px !important;
-                max-width: 55px !important;
-                text-align: center !important;
-                padding: 10px 0 !important;
+            .reference-btn {
+                display: none;
             }
 
-            /* 인쇄용: 배지 너비 조정 */
-            .status-badge {
-                width: 50px !important;
-                min-width: 50px !important;
-                font-size: 8.5px !important;
-                padding: 4px 0 !important;
-                margin: 0 auto !important;
-                display: inline-block !important;
-                white-space: nowrap !important;
+            table {
+                page-break-inside: avoid;
+                box-shadow: none;
             }
 
-            /* 인쇄 시 제외할 요소 */
-            .step-nav, .button-group, .reference-btn, .header-right {
+            .modal,
+            .modal-content {
                 display: none !important;
             }
 
-            /* 각 스텝을 각각의 새 페이지에 표시 */
-            .step-content {
-                display: block !important;
-                page-break-after: always !important;
+            .section-title {
+                page-break-after: avoid;
             }
-            
-            #step4 { page-break-after: auto !important; }
         }
+
         /* Responsive */
         @media (max-width: 768px) {
             .input-grid {
@@ -746,12 +673,9 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="header-left">
-                <h1>📋 2026년 안전&환경 서류 체크리스트</h1>
-                <p>원도급 업체 대상 (발주처 기준 작성)</p>
-                <p id="updateDate">최종 업데이트: 2026년 1월 24일</p>
-            </div>
-            <div class="header-right" style="font-size: 14px;">🏢 설비기획그룹 제작</div>
+            <h1>📋 2026년 안전&환경 서류 체크리스트</h1>
+            <p>원도급 업체 대상 (발주처 기준 작성)</p>
+            <p id="updateDate">최종 업데이트: 2026년 1월 23일</p>
         </div>
 
         <!-- Input Section -->
@@ -767,7 +691,7 @@
                 </div>
                 <div class="input-group">
                     <label for="contractAmount">💰 공사금액</label>
-                    <div class="slider-container">
+                    <div class="slider-input-group">
                         <input type="range" id="contractAmount" min="0" max="100" value="50" step="0.1">
                         <input type="text" id="contractAmountInput" class="number-input" value="50" placeholder="금액" inputmode="decimal">
                         <div class="value-display">억원</div>
@@ -775,8 +699,8 @@
                 </div>
                 <div class="input-group">
                     <label for="contractPeriod">⏱️ 공사기간</label>
-                    <div class="slider-container">
-                        <input type="range" id="contractPeriod" min="0.5" max="36" value="12" step="0.5">
+                    <div class="slider-input-group">
+                        <input type="range" id="contractPeriod" min="0.5" max="36" value="12" step="0.1">
                         <input type="text" id="contractPeriodInput" class="number-input" value="12" placeholder="기간" inputmode="decimal">
                         <div class="value-display">개월</div>
                     </div>
@@ -788,8 +712,9 @@
             </div>
 
             <div class="button-group">
-                <button class="btn-primary" id="updateBtn" onclick="updateAndNotify()">📊 체크리스트 업데이트</button>
-                <button class="btn-print" onclick="printPage()">🖨️ 인쇄&PDF저장</button>
+                <button class="btn-primary" id="updateBtn" onclick="updateTable()">📊 체크리스트 업데이트</button>
+                <button class="btn-print" onclick="printPage()">🖨️ 인쇄</button>
+                <button class="btn-pdf" onclick="downloadPDF()">📥 PDF 저장</button>
                 <button class="btn-reset" onclick="resetForm()">🔄 초기화</button>
             </div>
         </div>
@@ -877,7 +802,7 @@
                     { name: "필수안전교육", status: "●", description: "안전환경그룹 요청 시\n현장에서 실시(1~1.5시간)", exemption: "해당 없음", remark: "정비섹션 주관\n교육 참석자 명부 작성 및 서명 필수", baseAmount: 0, basePeriod: 0, legal: "산안법" },
                     { name: "안전작업허가서", status: "●", description: "정비섹션 양식에 따른\n당일 작업 승인서", exemption: "해당 없음", remark: "정비섹션 승인 필수\n자사 규정 양식 사용. 각 작업 유형별로 작성", baseAmount: 0, basePeriod: 0, legal: "산안법/사규" },
                     { name: "TBM (Tool Box Meeting)", status: "●", description: "정비섹션 양식에 따른\n당일 작업팀 안전 미팅 기록", exemption: "해당 없음", remark: "정비섹션 주관\n당일 투입 작업자 전원 참석, 작업 내용 및 위험요소 공유", baseAmount: 0, basePeriod: 0, legal: "산안법" },
-                    { name: "위험성평가서(JSA) 활용", status: "●", description: "시공계획서 기반\n당일 점검 및 실행", exemption: "해당 없음", remark: "시공계획서 내 위험성평가 내용을 현장에서 재확인하고 추가 위험요소 파악", baseAmount: 0, basePeriod: 0, legal: "산안법 제36조" }                    
+                    { name: "위험성평가서(JSA) 활용", status: "●", description: "시공계획서 기반\n당일 점검 및 실행", exemption: "해당 없음", remark: "시공계획서 내 위험성평가 내용을 현장에서 재확인하고 추가 위험요소 파악", baseAmount: 0, basePeriod: 0, legal: "산안법 제36조" }
                 ]
             }
         };
@@ -966,31 +891,6 @@
             return { text: "확인 필요", class: "check" };
         }
 
-        // 렌더링 캐시 추가
-        const renderedSteps = {};
-
-        function generateAllPages() {
-            const amount = parseFloat(document.getElementById("contractAmount").value);
-            const period = parseFloat(document.getElementById("contractPeriod").value);
-
-            // 모든 step 렌더링
-            for (let i = 1; i <= 4; i++) {
-                renderStep(i);
-            }
-
-            // 첫 번째 탭만 시각적으로 활성화 (다른 step 콘텐츠는 DOM에 유지)
-            for (let i = 1; i <= 4; i++) {
-                if (i === 1) {
-                    document.getElementById(`step${i}`).classList.add('active');
-                    document.querySelectorAll('.step-tab')[i-1].classList.add('active');
-                } else {
-                    // active 클래스는 제거하되, innerHTML은 유지됨
-                    document.getElementById(`step${i}`).classList.remove('active');
-                    document.querySelectorAll('.step-tab')[i-1].classList.remove('active');
-                }
-            }
-        }
-
         function switchStep(step) {
             // Hide all steps
             for (let i = 1; i <= 4; i++) {
@@ -1014,25 +914,20 @@
             const stepData = checklistData[step];
             if (!stepData) return;
             
-            if (renderedSteps[step]) {
-                updateStatusBadges(step, amount, period);
-                return;
-            }
-            
             let html = `<div class="section-title">${stepData.title}</div>`;
             html += `<table>
-                        <thead>
-                            <tr>
-                                <th style="width: 50px;">No.</th>
-                                <th>서류 종류</th>
-                                <th style="width: 75px;">필수 여부</th>
-                                <th style="width: 25%;">상세 설명(제출 내용)</th>
-                                <th style="width: 20%;">면제 및 간소화 조건</th>
-                                <th style="width: 18%;">특이사항</th>
-                                <th style="width: 60px;">참고</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
+                <thead>
+                    <tr>
+                        <th style="width: 4%;">No.</th>
+                        <th style="width: 18%;">서류<br/>종류</th>
+                        <th style="width: 8%;">필수<br/>여부</th>
+                        <th style="width: 20%;">상세 설명<br/>(제출 내용)</th>
+                        <th style="width: 18%;">면제 및<br/>간소화 조건</th>
+                        <th style="width: 18%;">특이사항</th>
+                        <th style="width: 7%;">참고</th>
+                    </tr>
+                </thead>
+                <tbody>`;
 
             stepData.items.forEach((item, index) => {
                 const statusDisplay = getStatusDisplay(item.status, item, amount, period);
@@ -1044,40 +939,22 @@
                     refBtn = `<button class="reference-btn" onclick="openModal('${item.reference}')">📚</button>`;
                 }
 
+                // 아이템 이름에 법적근거 추가 (툴팁용)
                 const nameHtml = `<strong class="legal-tooltip" data-legal="${item.legal || ''}">${item.name}</strong>`;
 
                 html += `<tr>
-                            <td>${index + 1}</td>
-                            <td>${nameHtml}</td>
-                            <td>
-                                <span class="status-badge ${badgeClass}" data-step="${step}" data-item="${index}">
-                                    ${badgeText}
-                                </span>
-                            </td>
-                            <td>${(item.description || '').replace(/\n/g, '<br>')}</td>
-                            <td>${(item.exemption || '').replace(/\n/g, '<br>')}</td>
-                            <td>${(item.remark || '').replace(/\n/g, '<br>')}</td>
-                            <td>${refBtn}</td>
-                        </tr>`;
+                    <td>${index + 1}</td>
+                    <td>${nameHtml}</td>
+                    <td><span class="status-badge ${badgeClass}">${badgeText}</span></td>
+                    <td>${(item.description || '').replace(/\n/g, '<br>')}</td>
+                    <td>${(item.exemption || '').replace(/\n/g, '<br>')}</td>
+                    <td>${(item.remark || '').replace(/\n/g, '<br>')}</td>
+                    <td>${refBtn}</td>
+                </tr>`;
             });
 
             html += `</tbody></table>`;
             stepContainer.innerHTML = html;
-            renderedSteps[step] = true;
-        }
-
-        function updateStatusBadges(step, amount, period) {
-            const stepData = checklistData[step];
-            const badges = document.querySelectorAll(`.status-badge[data-step="${step}"]`);
-            
-            badges.forEach((badge, index) => {
-                const item = stepData.items[index];
-                const statusDisplay = getStatusDisplay(item.status, item, amount, period);
-                badge.textContent = statusDisplay.text;
-                badge.className = `status-badge ${statusDisplay.class}`;
-                badge.setAttribute('data-step', step);
-                badge.setAttribute('data-item', index);
-            });
         }
 
         function updateAllSteps() {
@@ -1122,15 +999,7 @@
         }
 
         function printPage() {
-            // 1. 인쇄 전, 현재 설정된 금액/기간에 맞춰 모든 탭(1~4)의 내용을 강제로 생성합니다.
-            // 기존에 작성하신 generateAllPages() 함수가 이 역할을 완벽히 수행합니다.
-            generateAllPages();
-
-            // 2. 브라우저가 내용을 그릴 시간을 아주 잠깐(0.5초) 준 뒤 인쇄 창을 띄웁니다.
-            // (내용이 많으면 그리는 데 시간이 걸릴 수 있어 안전장치를 두는 것입니다)
-            setTimeout(() => {
-                window.print();
-            }, 500);
+            window.print();
         }
 
         function downloadPDF() {
@@ -1185,7 +1054,9 @@
         function validateAndCleanInput(type) {
             if (type === 'amount') {
                 let input = document.getElementById("contractAmountInput");
+                // 숫자와 소수점만 허용
                 input.value = input.value.replace(/[^0-9.]/g, '');
+                // 소수점이 2개 이상이면 마지막 하나만 유지
                 if ((input.value.match(/\./g) || []).length > 1) {
                     let parts = input.value.split('.');
                     input.value = parts[0] + '.' + parts.slice(1).join('');
@@ -1193,12 +1064,15 @@
                 
                 let val = parseFloat(input.value) || 0;
                 val = Math.max(0, Math.min(100, val));
+                // 0.1 단위로 반올림 (소수점 입력 지원)
                 val = Math.round(val * 10) / 10;
                 document.getElementById("contractAmount").value = val;
                 document.getElementById("contractAmountInput").value = val;
             } else if (type === 'period') {
                 let input = document.getElementById("contractPeriodInput");
+                // 숫자와 소수점만 허용
                 input.value = input.value.replace(/[^0-9.]/g, '');
+                // 소수점이 2개 이상이면 마지막 하나만 유지
                 if ((input.value.match(/\./g) || []).length > 1) {
                     let parts = input.value.split('.');
                     input.value = parts[0] + '.' + parts.slice(1).join('');
@@ -1206,8 +1080,8 @@
                 
                 let val = parseFloat(input.value) || 0.5;
                 val = Math.max(0.5, Math.min(36, val));
-                // 0.5 단위로 반올림
-                val = Math.round(val * 2) / 2;
+                // 0.1 단위로 반올림
+                val = Math.round(val * 10) / 10;
                 document.getElementById("contractPeriod").value = val;
                 document.getElementById("contractPeriodInput").value = val;
             }
@@ -1220,56 +1094,12 @@
         document.getElementById("contractAmountInput").addEventListener("blur", function() { validateAndCleanInput('amount'); });
         document.getElementById("contractPeriodInput").addEventListener("blur", function() { validateAndCleanInput('period'); });
 
-        // Event listeners with debounce for better performance
-        let debounceTimer;
-        function debouncedUpdate() {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => updateAllSteps(), 50);
-        }
-
-        document.getElementById("contractAmount").addEventListener("input", function() {
-            document.getElementById("contractAmountInput").value = this.value;
-            debouncedUpdate();
-        });
-
-        document.getElementById("contractPeriod").addEventListener("input", function() {
-            document.getElementById("contractPeriodInput").value = this.value;
-            debouncedUpdate();
-        });
-
-        document.getElementById("contractAmountInput").addEventListener("input", function() {
-            document.getElementById("contractAmount").value = this.value;
-            debouncedUpdate();
-        });
-
-        document.getElementById("contractPeriodInput").addEventListener("input", function() {
-            document.getElementById("contractPeriod").value = this.value;
-            debouncedUpdate();
-        });
-
         window.onclick = function(event) {
             const modal = document.getElementById("referenceModal");
             if (event.target == modal) {
                 modal.style.display = "none";
             }
         };
-
-// === 이 부분을 추가하세요 ===
-        function updateAndNotify() {
-            const btn = document.getElementById("updateBtn");
-            btn.classList.add("loading");
-            btn.disabled = true;
-            btn.innerHTML = "업데이트 중...";
-
-            setTimeout(() => {
-                generateAllPages();
-                btn.classList.remove("loading");
-                btn.disabled = false;
-                btn.innerHTML = "📊 체크리스트 업데이트";
-                alert('업데이트 되었습니다.\n제출 서류를 확인해주세요.');
-            }, 500);
-        }
-        // ============================
 
         // Initialize
         document.getElementById("contractAmount").addEventListener("input", updateSliderValues);
