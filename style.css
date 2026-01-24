@@ -1,0 +1,95 @@
+/* style.css */
+:root {
+    --primary-blue: #1e3a8a;
+    --secondary-blue: #3b82f6;
+    --accent-blue: #0ea5e9;
+    --border-gray: #e5e7eb;
+    --text-dark: #1f2937;
+    --light-gray: #f3f4f6;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f9ff;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* 헤더 스타일 */
+.header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+/* 입력 섹션 */
+.input-section {
+    padding: 20px;
+    background: var(--light-gray);
+    border-bottom: 1px solid var(--border-gray);
+}
+
+/* 테이블 공통 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto !important;
+    margin-top: 20px;
+}
+
+th {
+    background: #f9fafb;
+    border: 1px solid var(--border-gray);
+    padding: 12px;
+    text-align: center !important; /* 컬럼명 중앙 정렬 */
+    font-weight: 700;
+}
+
+td {
+    padding: 12px;
+    border: 1px solid var(--border-gray);
+    font-size: 13px;
+}
+
+/* NO. 열 설정 */
+td:first-child {
+    text-align: center !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+}
+
+/* 필수 여부 열 너비 고정 */
+th:nth-child(3), td:nth-child(3) {
+    width: 75px !important;
+    min-width: 75px !important;
+    text-align: center !important;
+}
+
+.status-badge {
+    width: 62px !important;
+    display: inline-block;
+    padding: 4px 0;
+    font-size: 11px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.status-badge.required { background: #dbeafe; color: var(--secondary-blue); border: 1px solid var(--secondary-blue); }
+.status-badge.exempt { background: #f3f4f6; color: var(--neutral-gray); border: 1px solid var(--border-gray); }
+
+/* 탭 스타일 */
+.step-nav { display: flex; background: var(--primary-blue); padding: 10px; gap: 10px; }
+.step-tab { padding: 10px 20px; color: white; cursor: pointer; border: none; background: rgba(255,255,255,0.1); }
+.step-tab.active { background: white; color: var(--primary-blue); font-weight: bold; }
+
+.step-content { display: none; padding: 20px; }
+.step-content.active { display: block; }
