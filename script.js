@@ -485,3 +485,52 @@ document.getElementById("contractAmount").addEventListener("input", updateSlider
 document.getElementById("contractPeriod").addEventListener("input", updateSliderValues);
 updateSliderValues();
 renderStep(1);
+
+// === script.js 맨 아랫부분에 추가 ===
+
+async function generateAiGuide() {
+    const aiContent = document.getElementById("aiContent");
+    const aiGuideBox = document.getElementById("aiGuideBox");
+    const btn = document.getElementById("aiGuideBtn");
+
+    // 1. 현재 입력된 공사 정보 가져오기
+    const projectName = document.getElementById("projectName").value || "미지정 공사";
+    const amount = document.getElementById("contractAmount").value;
+    const period = document.getElementById("contractPeriod").value;
+
+    // 2. UI 로딩 상태로 변경
+    btn.innerHTML = "AI 분석 중...";
+    btn.disabled = true;
+    aiGuideBox.style.display = "block";
+    aiContent.innerHTML = "파이썬 서버를 통해 분석 중입니다. 잠시만 기다려주세요...";
+
+    try {
+        // 3. 내 컴퓨터에서 실행 중인 파이썬 서버(server.py)로 요청
+        const response = await fetch('http://localhost:5000/api/ai-guide', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                projectName: projectName,
+                amount: amount,
+                period: period
+            })
+        });
+
+        if (!response.ok) throw new Error("서버 연결 실패");
+
+        const result = await response.json();
+        
+        // 4. API 결과에서 텍스트만 추출하여 화면에 표시
+        // 포스코 GPT 응답 구조에 따라 result.choices[0].message.content 사용
+        const gptText = result.choices[0].message.content;
+        aiContent.innerHTML = gptText;
+
+    } catch (error) {
+        console.error(error);
+        aiContent.innerHTML = "❌ 에러: 파이썬 서버(server.py)가 실행 중인지 확인해 주세요.";
+    } finally {
+        // 5. 버튼 상태 복구
+        btn.innerHTML = "✨ AI 공사 가이드 (Beta)";
+        btn.disabled = false;
+    }
+}
