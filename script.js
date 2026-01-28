@@ -488,6 +488,8 @@ renderStep(1);
 
 // === script.js 맨 아랫부분에 추가 ===
 
+// === script.js 맨 아랫부분에 기존 generateAiGuide 함수를 지우고 아래로 교체하세요 ===
+
 async function generateAiGuide() {
     const aiContent = document.getElementById("aiContent");
     const aiGuideBox = document.getElementById("aiGuideBox");
@@ -502,7 +504,7 @@ async function generateAiGuide() {
     btn.innerHTML = "AI 분석 중...";
     btn.disabled = true;
     aiGuideBox.style.display = "block";
-    aiContent.innerHTML = "파이썬 서버를 통해 분석 중입니다. 잠시만 기다려주세요...";
+    aiContent.innerText = "파이썬 서버를 통해 분석 중입니다. 잠시만 기다려주세요...";
 
     try {
         // 3. 내 컴퓨터에서 실행 중인 파이썬 서버(server.py)로 요청
@@ -516,21 +518,24 @@ async function generateAiGuide() {
             })
         });
 
-        if (!response.ok) throw new Error("서버 연결 실패");
+        if (!response.ok) throw new Error("서버 연결 실패 (server.py가 켜져있는지 확인하세요)");
 
         const result = await response.json();
         
-        // 4. API 결과에서 텍스트만 추출하여 화면에 표시
-        // 포스코 GPT 응답 구조에 따라 result.choices[0].message.content 사용
-        const gptText = result.choices[0].message.content;
-        aiContent.innerHTML = gptText;
-
-        } catch (error) {
-            // 기존의 고정된 메시지 대신 진짜 에러를 출력하게 바꿉니다.
-            console.error("상세 에러 내용:", error); 
-            aiContent.innerHTML = `❌ 에러가 발생했습니다: ${error.message}`;
+        // 4. [중요 수정] 서버에서 'answer'라는 이름표에 담아 보냈으므로 이를 가져옵니다.
+        if (result.answer) {
+            // 줄바꿈(\n)을 그대로 보여주기 위해 innerText를 사용합니다.
+            aiContent.innerText = result.answer;
+        } else if (result.error) {
+            aiContent.innerText = "AI 에러: " + result.error;
+        } else {
+            aiContent.innerText = "답변 형식이 올바르지 않습니다.";
         }
-        finally {
+
+    } catch (error) {
+        console.error("상세 에러 내용:", error); 
+        aiContent.innerText = `❌ 연결 실패: ${error.message}`;
+    } finally {
         // 5. 버튼 상태 복구
         btn.innerHTML = "✨ AI 공사 가이드 (Beta)";
         btn.disabled = false;
