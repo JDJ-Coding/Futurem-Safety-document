@@ -37,9 +37,21 @@ def ai_guide():
         "model": "gpt-5-chat-lates"
     }
 
-    # API 호출
+    # API 호출 부분 수정
     response = requests.post(url, headers=headers, data=json.dumps(payload))
-    return response.json()
+    
+    # 1. 먼저 결과를 변수에 담습니다.
+    result = response.json()
+    
+    # 2. 터미널에 출력합니다. (이제 진하게 보일 거예요!)
+    print("--- AI 응답 내용 ---")
+    print(result) 
+    print("-------------------")
+    
+    # 3. 마지막에 화면(JS)으로 보내줍니다.
+    return jsonify(result)
+
+
 
 if __name__ == '__main__':
     # 내 컴퓨터(localhost) 5000번 포트에서 실행

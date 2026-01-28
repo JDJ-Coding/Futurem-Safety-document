@@ -525,10 +525,12 @@ async function generateAiGuide() {
         const gptText = result.choices[0].message.content;
         aiContent.innerHTML = gptText;
 
-    } catch (error) {
-        console.error(error);
-        aiContent.innerHTML = "❌ 에러: 파이썬 서버(server.py)가 실행 중인지 확인해 주세요.";
-    } finally {
+        } catch (error) {
+            // 기존의 고정된 메시지 대신 진짜 에러를 출력하게 바꿉니다.
+            console.error("상세 에러 내용:", error); 
+            aiContent.innerHTML = `❌ 에러가 발생했습니다: ${error.message}`;
+        }
+        finally {
         // 5. 버튼 상태 복구
         btn.innerHTML = "✨ AI 공사 가이드 (Beta)";
         btn.disabled = false;
