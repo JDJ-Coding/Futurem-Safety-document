@@ -212,62 +212,36 @@ function switchStep(step) {
 
 function renderStep(step) {
     const stepContainer = document.getElementById(`step${step}`);
-    const amount = parseFloat(document.getElementById("contractAmount").value);
-    const period = parseFloat(document.getElementById("contractPeriod").value);
+    
+    // 이 상자가 없으면 에러 내지 말고 조용히 넘어가라! (에러 방지 핵심)
+    if (!stepContainer) return; 
+
+    const amount = parseFloat(document.getElementById("contractAmount").value) || 0;
+    const period = parseFloat(document.getElementById("contractPeriod").value) || 0;
     
     const stepData = checklistData[step];
     if (!stepData) return;
     
-    if (renderedSteps[step]) {
-        updateStatusBadges(step, amount, period);
-        return;
-    }
-    
     let html = `<div class="section-title">${stepData.title}</div>`;
-    html += `<table>
-                <thead>
-                    <tr>
-                        <th style="width: 50px;">No.</th>
-                        <th>서류 종류</th>
-                        <th style="width: 75px;">필수 여부</th>
-                        <th style="width: 25%;">상세 설명(제출 내용)</th>
-                        <th style="width: 20%;">면제 및 간소화 조건</th>
-                        <th style="width: 18%;">특이사항</th>
-                        <th style="width: 60px;">참고</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+    html += `<table><thead><tr><th style="width: 50px;">No.</th><th>서류 종류</th><th style="width: 75px;">필수 여부</th><th style="width: 25%;">상세 설명</th><th style="width: 20%;">면제 조건</th><th style="width: 18%;">특이사항</th><th style="width: 60px;">참고</th></tr></thead><tbody>`;
 
     stepData.items.forEach((item, index) => {
         const statusDisplay = getStatusDisplay(item.status, item, amount, period);
-        const badgeClass = statusDisplay.class;
-        const badgeText = statusDisplay.text;
-
-        let refBtn = "";
-        if (item.reference) {
-            refBtn = `<button class="reference-btn" onclick="openModal('${item.reference}')">📚</button>`;
-        }
-
-        const nameHtml = `<strong class="legal-tooltip" data-legal="${item.legal || ''}">${item.name}</strong>`;
-
+        let refBtn = item.reference ? `<button class="reference-btn" onclick="openModal('${item.reference}')">📚</button>` : "";
+        
         html += `<tr>
                     <td>${index + 1}</td>
-                    <td>${nameHtml}</td>
-                    <td>
-                        <span class="status-badge ${badgeClass}" data-step="${step}" data-item="${index}">
-                            ${badgeText}
-                        </span>
-                    </td>
+                    <td><strong class="legal-tooltip" data-legal="${item.legal || ''}">${item.name}</strong></td>
+                    <td><span class="status-badge ${statusDisplay.class}">${statusDisplay.text}</span></td>
                     <td>${(item.description || '').replace(/\n/g, '<br>')}</td>
                     <td>${(item.exemption || '').replace(/\n/g, '<br>')}</td>
                     <td>${(item.remark || '').replace(/\n/g, '<br>')}</td>
                     <td>${refBtn}</td>
                 </tr>`;
     });
-
     html += `</tbody></table>`;
+    
     stepContainer.innerHTML = html;
-    renderedSteps[step] = true;
 }
 
 function updateStatusBadges(step, amount, period) {
@@ -358,11 +332,15 @@ function resetForm() {
     document.getElementById("contractAmount").value = "50";
     document.getElementById("contractPeriod").value = "12";
     updateSliderValues();
-    document.getElementById("tableContainer").innerHTML = `
-        <div class="empty-state">
-            <p>📊 위의 조건을 설정하고 "체크리스트 업데이트" 버튼을 클릭하세요.</p>
-        </div>
-    `;
+    
+    // 이 부분을 아래처럼 안전하게 바꾸세요.
+    const container = document.getElementById("tableContainer");
+    if (container) {
+        container.innerHTML = `<div class="empty-state"><p>📊 조건을 설정하고 업데이트를 클릭하세요.</p></div>`;
+    }
+    
+    // 대신 첫 번째 탭을 다시 보여주도록 설정
+    switchStep(1);
 }
 
 function updateSliderValues() {
@@ -459,79 +437,79 @@ window.onclick = function(event) {
 };
 
 // === 이 부분을 추가하세요 ===
+// [수정본] 기존 기능을 살리면서 AI 기능을 통합한 코드입니다.
+// 이 부분부터 파일 끝까지 덮어쓰세요.
+
 function updateAndNotify() {
     const btn = document.getElementById("updateBtn");
-    btn.classList.add("loading");
-    btn.disabled = true;
-    btn.innerHTML = "업데이트 중...";
+    if (btn) {
+        btn.innerHTML = "⏳ 업데이트 중...";
+        btn.disabled = true;
+    }
 
     setTimeout(() => {
-        const amount = parseFloat(document.getElementById("contractAmount").value);
-        const period = parseFloat(document.getElementById("contractPeriod").value);
-        
-        generateAllPages();
-        updateDocumentCounts(amount, period);
-        
-        btn.classList.remove("loading");
-        btn.disabled = false;
-        btn.innerHTML = "📊 체크리스트 업데이트";
-        alert('업데이트 되었습니다.\n제출 서류를 확인해주세요.');
-    }, 500);
+        try {
+            // 모든 페이지 강제 렌더링
+            for (let i = 1; i <= 4; i++) {
+                renderStep(i);
+            }
+            
+            // 필수 개수 업데이트 (상단 탭 글자)
+            const amount = parseFloat(document.getElementById("contractAmount").value) || 0;
+            const period = parseFloat(document.getElementById("contractPeriod").value) || 0;
+            updateDocumentCounts(amount, period);
+
+            alert('✅ 업데이트 완료!');
+        } catch (e) {
+            console.error(e);
+        } finally {
+            if (btn) {
+                btn.innerHTML = "📊 체크리스트 업데이트";
+                btn.disabled = false;
+            }
+        }
+    }, 200);
 }
-// ============================
 
-// Initialize
-document.getElementById("contractAmount").addEventListener("input", updateSliderValues);
-document.getElementById("contractPeriod").addEventListener("input", updateSliderValues);
-updateSliderValues();
-renderStep(1);
+// 초기화 로직
+document.addEventListener('DOMContentLoaded', () => {
+    updateSliderValues();
+    renderStep(1); // 첫 페이지 로드
+});
 
-// === script.js 맨 아랫부분에 추가 ===
-
+// ✨ 통합 AI 공사 가이드 함수 (서버 응답 구조에 맞게 수정됨)
 async function generateAiGuide() {
     const aiContent = document.getElementById("aiContent");
     const aiGuideBox = document.getElementById("aiGuideBox");
     const btn = document.getElementById("aiGuideBtn");
 
-    // 1. 현재 입력된 공사 정보 가져오기
     const projectName = document.getElementById("projectName").value || "미지정 공사";
     const amount = document.getElementById("contractAmount").value;
     const period = document.getElementById("contractPeriod").value;
 
-    // 2. UI 로딩 상태로 변경
-    btn.innerHTML = "AI 분석 중...";
+    btn.innerHTML = "⚡ AI 분석 중...";
     btn.disabled = true;
     aiGuideBox.style.display = "block";
-    aiContent.innerHTML = "파이썬 서버를 통해 분석 중입니다. 잠시만 기다려주세요...";
+    aiContent.innerHTML = "데이터를 분석 중입니다...";
 
     try {
-        // 3. 내 컴퓨터에서 실행 중인 파이썬 서버(server.py)로 요청
         const response = await fetch('http://localhost:5000/api/ai-guide', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                projectName: projectName,
-                amount: amount,
-                period: period
-            })
+            body: JSON.stringify({ projectName, amount, period })
         });
 
-        if (!response.ok) throw new Error("서버 연결 실패");
-
-        const result = await response.json();
+        const data = await response.json();
         
-        // 4. API 결과에서 텍스트만 추출하여 화면에 표시
-        // 포스코 GPT 응답 구조에 따라 result.choices[0].message.content 사용
-        const gptText = result.choices[0].message.content;
-        aiContent.innerHTML = gptText;
-
-        } catch (error) {
-            // 기존의 고정된 메시지 대신 진짜 에러를 출력하게 바꿉니다.
-            console.error("상세 에러 내용:", error); 
-            aiContent.innerHTML = `❌ 에러가 발생했습니다: ${error.message}`;
+        // server.py가 보내주는 'answer'를 받아서 화면에 출력
+        if (data.answer) {
+            aiContent.innerHTML = data.answer.replace(/\n/g, '<br>');
+        } else if (data.choices) { // 혹시 직접 GPT 응답일 경우 대비
+            aiContent.innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>');
         }
-        finally {
-        // 5. 버튼 상태 복구
+    } catch (error) {
+        aiContent.innerHTML = "❌ 서버 연결 실패. 파이썬 서버가 켜져 있는지 확인하세요.";
+    } finally {
         btn.innerHTML = "✨ AI 공사 가이드 (Beta)";
         btn.disabled = false;
     }
