@@ -14,10 +14,16 @@ def ai_guide():
     p_info = f"공사명:{user_data.get('projectName')}, {user_data.get('amount')}억, {user_data.get('period')}개월"
 
     if ENV == "HOME":
-        # [집] Gemini 설정
-        api_key = "AIzaSyAIjNXATSWd7nnGljFo8EZ3SEBe3bzCzfM"
+        # [집] Gemini 설정 - 하드코딩된 키 대신 환경변수 사용
+        api_key = os.getenv("MY_API_KEY_GOOGLE")
+        
+        # 환경변수가 설정되어 있는지 확인 (권장)
+        if not api_key:
+            raise ValueError("환경변수 'MY_API_KEY_GOOGLE'이 설정되지 않았습니다.")
+
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={api_key}"
         payload = {"contents": [{"parts": [{"text": f"{p_info} 안전 주의사항 요약해줘."}]}]}
+        
         res = requests.post(url, json=payload)
         final_answer = res.json()['candidates'][0]['content']['parts'][0]['text']
     else:

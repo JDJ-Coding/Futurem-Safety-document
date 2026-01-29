@@ -37,7 +37,7 @@ def ai_guide():
         # 3. 환경(ENV)에 따른 분기 처리
         if ENV == "HOME":
             # --- [집] 사외망용 Gemini 설정 ---
-            api_key = "AIzaSyAIjNXATSWd7nnGljFo8EZ3SEBe3bzCzfM"
+            api_key = os.getenv("MY_API_KEY_GOOGLE")
             url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={api_key}"
             
             payload = {

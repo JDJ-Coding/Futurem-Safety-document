@@ -37,7 +37,7 @@ def ai_guide():
         full_content = f"{p_info}\n\n[상세 요청사항]\n{user_q}\n\n위의 공사 조건과 요청사항을 종합하여 포스코 퓨처엠 안전 전문가로서 답변해줘."
 
         if ENV == "HOME":
-            api_key = "AIzaSyAIjNXATSWd7nnGljFo8EZ3SEBe3bzCzfM"
+            api_key = os.getenv("MY_API_KEY_GOOGLE")
             url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={api_key}"
             
             payload = {
