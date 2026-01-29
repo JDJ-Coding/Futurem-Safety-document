@@ -510,7 +510,7 @@ async function generateAiGuide() {
 
     try {
         // 3. 내 컴퓨터에서 실행 중인 파이썬 서버(server.py)로 요청
-        const response = await fetch('http://localhost:5000/api/ai-guide', {
+        const response = await fetch('http://10.34.21.66:5000/api/ai-guide', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
