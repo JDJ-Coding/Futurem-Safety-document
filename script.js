@@ -490,56 +490,65 @@ renderStep(1);
 
 // === script.js 맨 아랫부분에 기존 generateAiGuide 함수를 지우고 아래로 교체하세요 ===
 
+/**
+ * 서버 주소를 자동으로 결정하는 함수
+ * 1. 본인: 더블클릭(file://) -> 127.0.0.1 (자기자신) 연결
+ * 2. 본인/동료: IP접속(http://) -> 접속한 그 IP 그대로 연결
+ */
+function getServerUrl() {
+    const port = '5000';
+    const apiPath = '/api/ai-guide';
+
+    // 조건 2 만족: IP 주소를 치고 들어온 경우 (http://10.x.x.x:5000)
+    // window.location.origin은 접속한 IP와 포트를 자동으로 가져옵니다.
+    if (window.location.protocol.startsWith('http')) {
+        return `${window.location.origin}${apiPath}`;
+    }
+
+    // 조건 1 만족: 본인이 파일을 더블클릭해서 연 경우 (file:///...)
+    // 본인 PC에서 서버가 돌고 있으므로 127.0.0.1로 연결합니다.
+    return `http://127.0.0.1:${port}${apiPath}`;
+}
+
+// AI 가이드 실행 함수
 async function generateAiGuide() {
     const aiContent = document.getElementById("aiContent");
     const aiGuideBox = document.getElementById("aiGuideBox");
     const btn = document.getElementById("aiGuideBtn");
 
-    // 1. 현재 입력된 공사 정보 가져오기
+    // 기본 정보 가져오기
     const projectName = document.getElementById("projectName").value || "미지정 공사";
     const amount = document.getElementById("contractAmount").value;
     const period = document.getElementById("contractPeriod").value;
-    // [추가] 사용자가 입력한 질문(텍스트) 가져오기
-    const userQuestion = document.getElementById('userQuestion').value; 
 
-    // 2. UI 로딩 상태로 변경
-    btn.innerHTML = "AI 분석 중...";
+    // UI 초기화
+    btn.innerHTML = "⚡ AI 분석 중...";
     btn.disabled = true;
     aiGuideBox.style.display = "block";
-    aiContent.innerText = "파이썬 서버를 통해 분석 중입니다. 잠시만 기다려주세요...";
+    aiContent.innerHTML = "데이터를 분석 중입니다...";
+
+    // 자동 감지된 서버 주소 사용
+    const serverUrl = getServerUrl();
+    console.log("요청 서버 주소:", serverUrl);
 
     try {
-        // 3. 내 컴퓨터에서 실행 중인 파이썬 서버(server.py)로 요청
-        const response = await fetch('http://10.34.21.66:5000/api/ai-guide', {
+        const response = await fetch(serverUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                projectName: projectName,
-                amount: amount,
-                period: period,
-                question: userQuestion // <--- 파이썬의 user_data.get('question')과 일치해야 함!
-            })
+            body: JSON.stringify({ projectName, amount, period })
         });
 
-        if (!response.ok) throw new Error("서버 연결 실패 (server.py가 켜져있는지 확인하세요)");
-
-        const result = await response.json();
+        const data = await response.json();
         
-        // 4. [중요 수정] 서버에서 'answer'라는 이름표에 담아 보냈으므로 이를 가져옵니다.
-        if (result.answer) {
-            // 줄바꿈(\n)을 그대로 보여주기 위해 innerText를 사용합니다.
-            aiContent.innerText = result.answer;
-        } else if (result.error) {
-            aiContent.innerText = "AI 에러: " + result.error;
+        if (data.answer) {
+            aiContent.innerHTML = data.answer.replace(/\n/g, '<br>');
         } else {
-            aiContent.innerText = "답변 형식이 올바르지 않습니다.";
+            aiContent.innerHTML = "❌ 에러: " + (data.error || "알 수 없는 오류");
         }
-
     } catch (error) {
-        console.error("상세 에러 내용:", error); 
-        aiContent.innerText = `❌ 연결 실패: ${error.message}`;
+        console.error("연결 에러:", error);
+        aiContent.innerHTML = "❌ 연결 실패: 서버가 꺼져있거나 네트워크 설정을 확인하세요.";
     } finally {
-        // 5. 버튼 상태 복구
         btn.innerHTML = "✨ AI 공사 가이드 (Beta)";
         btn.disabled = false;
     }
