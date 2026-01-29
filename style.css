@@ -217,6 +217,29 @@ body {
     background: #f0f9ff;
 }
 
+/* ... 기존에 있던 코드들 ... */
+
+/* [추가] 상세 문의사항(textarea) 스타일 */
+textarea {
+    width: 100%;
+    height: 100px; /* 입력창 높이 */
+    padding: 12px;
+    margin-top: 8px; /* 위쪽 항목과의 간격 */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Pretendard', sans-serif; /* 기존 폰트와 통일 */
+    font-size: 16px;
+    resize: vertical; /* 사용자가 아래로 늘릴 수 있게 함 */
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 함 */
+}
+
+/* 마우스를 올렸을 때 강조 효과 (선택사항) */
+textarea:focus {
+    outline: none;
+    border-color: #005aab; /* 포스코 블루 계열로 강조 */
+    box-shadow: 0 0 5px rgba(0, 90, 171, 0.2);
+}
+
 /* Slider Container (Fixed) */
 .slider-container {
     display: flex;

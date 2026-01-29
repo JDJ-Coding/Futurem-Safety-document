@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 # 🚩 집이면 "HOME", 회사면 "OFFICE"로 이것만 바꾸면 끝!
-ENV = "HOME" 
+ENV = "OFFICE" 
 
 @app.route('/api/ai-guide', methods=['POST'])
 def ai_guide():

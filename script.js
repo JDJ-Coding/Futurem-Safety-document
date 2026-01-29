@@ -499,6 +499,8 @@ async function generateAiGuide() {
     const projectName = document.getElementById("projectName").value || "미지정 공사";
     const amount = document.getElementById("contractAmount").value;
     const period = document.getElementById("contractPeriod").value;
+    // [추가] 사용자가 입력한 질문(텍스트) 가져오기
+    const userQuestion = document.getElementById('userQuestion').value; 
 
     // 2. UI 로딩 상태로 변경
     btn.innerHTML = "AI 분석 중...";
@@ -514,7 +516,8 @@ async function generateAiGuide() {
             body: JSON.stringify({
                 projectName: projectName,
                 amount: amount,
-                period: period
+                period: period,
+                question: userQuestion // <--- 파이썬의 user_data.get('question')과 일치해야 함!
             })
         });
 
