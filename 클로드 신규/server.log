@@ -1,0 +1,72 @@
+2026-02-02 23:27:25,495 - INFO - Server starting in HOME environment
+2026-02-02 23:27:25,501 - INFO - ==================================================
+2026-02-02 23:27:25,509 - INFO - Server starting...
+2026-02-02 23:27:25,511 - INFO - Environment: HOME
+2026-02-02 23:27:25,513 - INFO - Access URL: http://0.0.0.0:5000
+2026-02-02 23:27:25,519 - INFO - ==================================================
+2026-02-02 23:27:25,579 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.18:5000
+2026-02-02 23:27:25,580 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-02 23:27:25,593 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-02 23:27:26,023 - INFO - Server starting in HOME environment
+2026-02-02 23:27:26,025 - INFO - ==================================================
+2026-02-02 23:27:26,026 - INFO - Server starting...
+2026-02-02 23:27:26,033 - INFO - Environment: HOME
+2026-02-02 23:27:26,033 - INFO - Access URL: http://0.0.0.0:5000
+2026-02-02 23:27:26,034 - INFO - ==================================================
+2026-02-02 23:27:26,058 - WARNING -  * Debugger is active!
+2026-02-02 23:27:26,068 - INFO -  * Debugger PIN: 954-975-986
+2026-02-02 23:27:35,284 - INFO - Main page accessed from 127.0.0.1
+2026-02-02 23:27:35,743 - INFO - 127.0.0.1 - - [02/Feb/2026 23:27:35] "GET / HTTP/1.1" 200 -
+2026-02-02 23:27:35,807 - INFO - 127.0.0.1 - - [02/Feb/2026 23:27:35] "GET /style_upgraded.css HTTP/1.1" 200 -
+2026-02-02 23:27:35,837 - INFO - 127.0.0.1 - - [02/Feb/2026 23:27:35] "GET /script_upgraded.js HTTP/1.1" 200 -
+2026-02-02 23:27:36,286 - ERROR - Error serving static file favicon.ico: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2026-02-02 23:27:36,287 - INFO - 127.0.0.1 - - [02/Feb/2026 23:27:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-02-02 23:30:20,286 - INFO - AI Guide request from 127.0.0.1
+2026-02-02 23:30:20,288 - INFO - Processing request - Project: ¹ÌÁöÁ¤ °ø»ç, Amount: 21¾ï, Period: 24.5°³¿ù
+2026-02-02 23:30:20,289 - INFO - Using Gemini API
+2026-02-02 23:30:34,343 - INFO - Gemini API request successful - Response length: 2119 chars
+2026-02-02 23:30:34,343 - INFO - Request completed in 14.06 seconds
+2026-02-02 23:30:34,346 - INFO - 127.0.0.1 - - [02/Feb/2026 23:30:34] "POST /api/ai-guide HTTP/1.1" 200 -
+2026-02-02 23:31:44,985 - INFO -  * Detected change in 'C:\\Users\\Àå´öÁø\\Desktop\\ÄÚµå\\Safety-document\\Å¬·Îµå ½Å±Ô\\server_upgraded.py', reloading
+2026-02-02 23:31:44,991 - INFO -  * Detected change in 'C:\\Users\\Àå´öÁø\\Desktop\\ÄÚµå\\Safety-document\\Å¬·Îµå ½Å±Ô\\server_upgraded.py', reloading
+2026-02-02 23:31:46,061 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-02 23:31:46,730 - INFO - Server starting in HOME environment
+2026-02-02 23:31:46,736 - INFO - ==================================================
+2026-02-02 23:31:46,737 - INFO - Server starting...
+2026-02-02 23:31:46,739 - INFO - Environment: HOME
+2026-02-02 23:31:46,742 - INFO - Access URL: http://0.0.0.0:5000
+2026-02-02 23:31:46,744 - INFO - ==================================================
+2026-02-02 23:31:46,788 - WARNING -  * Debugger is active!
+2026-02-02 23:31:46,803 - INFO -  * Debugger PIN: 954-975-986
+2026-02-02 23:33:59,771 - INFO -  * Detected change in 'C:\\Users\\Àå´öÁø\\Desktop\\ÄÚµå\\Safety-document\\Å¬·Îµå ½Å±Ô\\server_upgraded.py', reloading
+2026-02-02 23:33:59,938 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-02 23:34:00,759 - INFO - Server starting in HOME environment
+2026-02-02 23:34:00,762 - INFO - ==================================================
+2026-02-02 23:34:00,762 - INFO - Server starting...
+2026-02-02 23:34:00,763 - INFO - Environment: HOME
+2026-02-02 23:34:00,763 - INFO - Access URL: http://0.0.0.0:5000
+2026-02-02 23:34:00,763 - INFO - ==================================================
+2026-02-02 23:34:00,802 - WARNING -  * Debugger is active!
+2026-02-02 23:34:00,813 - INFO -  * Debugger PIN: 954-975-986
+2026-02-02 23:34:26,186 - INFO -  * Detected change in 'C:\\Users\\Àå´öÁø\\Desktop\\ÄÚµå\\Safety-document\\Å¬·Îµå ½Å±Ô\\server_upgraded.py', reloading
+2026-02-02 23:34:26,351 - INFO -  * Restarting with watchdog (windowsapi)
+2026-02-02 23:34:27,278 - INFO - Server starting in HOME environment
+2026-02-02 23:34:27,281 - INFO - ==================================================
+2026-02-02 23:34:27,281 - INFO - Server starting...
+2026-02-02 23:34:27,281 - INFO - Environment: HOME
+2026-02-02 23:34:27,281 - INFO - Access URL: http://0.0.0.0:5000
+2026-02-02 23:34:27,281 - INFO - ==================================================
+2026-02-02 23:34:27,318 - WARNING -  * Debugger is active!
+2026-02-02 23:34:27,327 - INFO -  * Debugger PIN: 954-975-986
+2026-02-02 23:45:35,741 - INFO - AI Guide request from 127.0.0.1
+2026-02-02 23:45:35,745 - INFO - Processing request - Project: ¹ÌÁöÁ¤ °ø»ç, Amount: 0¾ï, Period: 0.5°³¿ù
+2026-02-02 23:45:35,746 - INFO - Using Gemini API
+2026-02-02 23:45:49,072 - INFO - Gemini API request successful - Response length: 2318 chars
+2026-02-02 23:45:49,077 - INFO - Request completed in 13.34 seconds
+2026-02-02 23:45:49,081 - INFO - 127.0.0.1 - - [02/Feb/2026 23:45:49] "POST /api/ai-guide HTTP/1.1" 200 -
+2026-02-02 23:46:51,452 - INFO -  * Detected change in 'C:\\Users\\Àå´öÁø\\Desktop\\ÄÚµå\\Safety-document\\Å¬·Îµå ½Å±Ô\\server_upgraded.py', reloading
+2026-02-02 23:46:51,453 - INFO -  * Detected change in 'C:\\Users\\Àå´öÁø\\Desktop\\ÄÚµå\\Safety-document\\Å¬·Îµå ½Å±Ô\\server_upgraded.py', reloading
+2026-02-02 23:46:52,315 - INFO -  * Restarting with watchdog (windowsapi)

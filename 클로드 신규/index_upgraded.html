@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026년 안전&환경 서류 체크리스트 Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="style_upgraded.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>📋 2026년 안전&환경 서류 체크리스트 Pro</h1>
+                <p>원도급 업체 대상 (발주처 기준 작성)</p>
+                <p id="updateDate">최종 업데이트: 2026년 1월 24일</p>
+            </div>
+            <div class="header-right" style="font-size: 14px;">🏢 설비기획그룹 제작</div>
+        </div>
+
+        <!-- Dashboard Section (NEW) -->
+        <div class="dashboard-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <div class="stat-label">총 서류 수</div>
+                        <div class="stat-value" id="totalDocs">0</div>
+                    </div>
+                </div>
+                <div class="stat-card required-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <div class="stat-label">필수 서류</div>
+                        <div class="stat-value" id="requiredDocs">0</div>
+                    </div>
+                </div>
+                <div class="stat-card check-card">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-content">
+                        <div class="stat-label">확인 필요</div>
+                        <div class="stat-value" id="checkDocs">0</div>
+                    </div>
+                </div>
+                <div class="stat-card exempt-card">
+                    <div class="stat-icon">➖</div>
+                    <div class="stat-content">
+                        <div class="stat-label">미해당</div>
+                        <div class="stat-value" id="exemptDocs">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Chart -->
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="projectName">📁 투자명</label>
+                    <input type="text" id="projectName" placeholder="예: 양극재 공장 신축" value="">
+                </div>
+                <div class="input-group">
+                    <label for="companyName">🏢 업체명</label>
+                    <input type="text" id="companyName" placeholder="예: 대금산업" value="">
+                </div>
+                <div class="input-group">
+                    <label for="contractAmount">💰 공사금액</label>
+                    <div class="slider-container">
+                        <input type="range" id="contractAmount" min="0" max="100" value="50" step="0.1">
+                        <input type="text" id="contractAmountInput" class="number-input" value="50" placeholder="금액" inputmode="decimal">
+                        <div class="value-display">억원</div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="contractPeriod">⏱️ 공사기간</label>
+                    <div class="slider-container">
+                        <input type="range" id="contractPeriod" min="0.5" max="36" value="12" step="0.5">
+                        <input type="text" id="contractPeriodInput" class="number-input" value="12" placeholder="기간" inputmode="decimal">
+                        <div class="value-display">개월</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="userQuestion">상세 공사내용 및 추가 문의사항</label>
+                    <textarea id="userQuestion" placeholder="예: 크레인 작업이 포함되어 있습니다. 고소 작업 시 안전 수칙을 중점적으로 알려주세요."></textarea>
+                </div>
+            </div>
+
+            <div class="info-box">
+                ℹ️ 공사금액과 공사기간을 조절하면 해당 기준에 따라 필수 여부가 자동으로 변환됩니다. 모든 서류 현황을 한눈에 확인한 후 PDF 저장 또는 인쇄하세요.
+            </div>
+
+            <!-- Search and Filter (NEW) -->
+            <div class="search-filter-section">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 서류명, 설명, 법적근거 검색...">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">전체</button>
+                    <button class="filter-btn" data-filter="required">필수만</button>
+                    <button class="filter-btn" data-filter="check">확인필요</button>
+                    <button class="filter-btn" data-filter="exempt">미해당</button>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" id="updateBtn" onclick="updateAndNotify()">📊 체크리스트 업데이트</button>
+                <button class="btn-primary" id="aiGuideBtn" style="background: #8b5cf6;" onclick="generateAiGuide()">✨ AI 공사 가이드 (Beta)</button>
+                <button class="btn-save" onclick="saveChecklist()">💾 현재 상태 저장</button>
+                <button class="btn-load" onclick="loadChecklist()">📂 불러오기</button>
+                <button class="btn-print" onclick="printPage()">🖨️ 인쇄&PDF저장</button>
+                <button class="btn-reset" onclick="resetForm()">🔄 초기화</button>
+            </div>
+
+            <!-- AI Guide Box -->
+            <div id="aiGuideBox" class="info-box" style="display: none; background: #f5f3ff; border-left: 4px solid #8b5cf6; margin-top: 20px;">
+                <div style="font-weight: bold; margin-bottom: 10px; color: #5b21b6;">🤖 AI 분석 결과:</div>
+                <div id="aiContent" style="white-space: pre-wrap; font-size: 13.5px; color: #333;"></div>
+            </div>
+        </div>
+
+        <!-- Step Navigation -->
+        <div class="step-nav" id="stepNav">
+            <button class="step-tab active" onclick="switchStep(1)">Ⅰ. 안전&환경 <span class="doc-count" id="count1"></span></button>
+            <button class="step-tab" onclick="switchStep(2)">Ⅱ. 시공계획서 <span class="doc-count" id="count2"></span></button>
+            <button class="step-tab" onclick="switchStep(3)">Ⅲ. 착공계 <span class="doc-count" id="count3"></span></button>
+            <button class="step-tab" onclick="switchStep(4)">Ⅳ. 착공 시(당일) <span class="doc-count" id="count4"></span></button>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-section">
+            <div id="step1" class="step-content active"></div>
+            <div id="step2" class="step-content"></div>
+            <div id="step3" class="step-content"></div>
+            <div id="step4" class="step-content"></div>
+        </div>
+    </div>
+
+    <!-- Reference Modal -->
+    <div id="referenceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="script_upgraded.js"></script>
+</body>
+</html>
