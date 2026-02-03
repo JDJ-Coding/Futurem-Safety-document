@@ -1,4 +1,4 @@
-// Comprehensive Data Structure
+// Comprehensive Data Structure (기존 데이터 그대로 유지)
 const checklistData = {
     1: {
         title: "Ⅰ. 안전&환경 (자사 기준)",
@@ -60,7 +60,7 @@ const checklistData = {
     }
 };
 
-// Reference tables data
+// Reference tables data (기존 데이터 그대로 유지)
 const referenceData = {
     "참고표 1": {
         title: "공사금액별 현장대리인 자격 기준",
@@ -97,21 +97,21 @@ const referenceData = {
     }
 };
 
-// Utility functions - 정합성 검증
+// ===== NEW: Global State Management =====
+let currentFilter = 'all';
+let currentSearchTerm = '';
+
+// Utility functions - 정합성 검증 (기존 로직 그대로)
 function getStatusDisplay(status, item, amount, period) {
-    // ● = 항상 필수 (조건 없음)
     if (status === "●") {
         return { text: "필수", class: "required" };
     }
     
-    // ○ = 조건부 필수
     if (status === "○") {
-        // baseAmount와 basePeriod 모두 0이면 = 항상 "확인 필요"
         if (item.baseAmount === 0 && item.basePeriod === 0) {
             return { text: "확인 필요", class: "check" };
         }
         
-        // baseAmount 조건만 있을 때 (예: 20억 이상)
         if (item.baseAmount > 0 && item.basePeriod === 0) {
             if (amount >= item.baseAmount) {
                 return { text: "필수", class: "required" };
@@ -120,7 +120,6 @@ function getStatusDisplay(status, item, amount, period) {
             }
         }
         
-        // basePeriod 조건만 있을 때 (예: 1개월 이상)
         if (item.baseAmount === 0 && item.basePeriod > 0) {
             if (period >= item.basePeriod) {
                 return { text: "필수", class: "required" };
@@ -129,7 +128,6 @@ function getStatusDisplay(status, item, amount, period) {
             }
         }
         
-        // baseAmount와 basePeriod 모두 있을 때 (둘 다 만족해야 필수)
         if (item.baseAmount > 0 && item.basePeriod > 0) {
             if (amount >= item.baseAmount && period >= item.basePeriod) {
                 return { text: "필수", class: "required" };
@@ -144,10 +142,203 @@ function getStatusDisplay(status, item, amount, period) {
     return { text: "확인 필요", class: "check" };
 }
 
-// 렌더링 캐시 추가
+// 렌더링 캐시 (기존)
 const renderedSteps = {};
 
-// 각 단계별 필수 서류 개수 계산
+// ===== NEW: Dashboard Update Functions =====
+function updateDashboard() {
+    const amount = parseFloat(document.getElementById("contractAmount").value);
+    const period = parseFloat(document.getElementById("contractPeriod").value);
+    
+    let totalDocs = 0;
+    let requiredDocs = 0;
+    let checkDocs = 0;
+    let exemptDocs = 0;
+    
+    for (let step = 1; step <= 4; step++) {
+        const stepData = checklistData[step];
+        if (!stepData) continue;
+        
+        stepData.items.forEach(item => {
+            totalDocs++;
+            const statusDisplay = getStatusDisplay(item.status, item, amount, period);
+            if (statusDisplay.class === "required") requiredDocs++;
+            else if (statusDisplay.class === "check") checkDocs++;
+            else if (statusDisplay.class === "exempt") exemptDocs++;
+        });
+    }
+    
+    document.getElementById("totalDocs").textContent = totalDocs;
+    document.getElementById("requiredDocs").textContent = requiredDocs;
+    document.getElementById("checkDocs").textContent = checkDocs;
+    document.getElementById("exemptDocs").textContent = exemptDocs;
+    
+    updateChart(requiredDocs, checkDocs, exemptDocs);
+}
+
+// ===== NEW: Chart.js Integration =====
+let progressChart = null;
+
+function updateChart(required, check, exempt) {
+    const ctx = document.getElementById('progressChart');
+    if (!ctx) return;
+    
+    if (progressChart) {
+        progressChart.destroy();
+    }
+    
+    progressChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['필수', '확인 필요', '미해당'],
+            datasets: [{
+                data: [required, check, exempt],
+                backgroundColor: [
+                    '#3b82f6',
+                    '#ef4444',
+                    '#6b7280'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: {
+                            size: 12,
+                            weight: '600'
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: '서류 현황 분석',
+                    font: {
+                        size: 16,
+                        weight: '700'
+                    },
+                    padding: 20
+                }
+            }
+        }
+    });
+}
+
+// ===== NEW: Search and Filter Functions =====
+function setupSearchAndFilter() {
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            currentSearchTerm = e.target.value.toLowerCase();
+            applyFilters();
+        });
+    }
+    
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            applyFilters();
+        });
+    });
+}
+
+function applyFilters() {
+    const amount = parseFloat(document.getElementById("contractAmount").value);
+    const period = parseFloat(document.getElementById("contractPeriod").value);
+    
+    for (let step = 1; step <= 4; step++) {
+        const stepData = checklistData[step];
+        const table = document.querySelector(`#step${step} table tbody`);
+        if (!table) continue;
+        
+        const rows = table.querySelectorAll('tr');
+        rows.forEach((row, index) => {
+            const item = stepData.items[index];
+            if (!item) return;
+            
+            const statusDisplay = getStatusDisplay(item.status, item, amount, period);
+            const matchesFilter = currentFilter === 'all' || statusDisplay.class === currentFilter;
+            
+            const searchText = `${item.name} ${item.description} ${item.legal}`.toLowerCase();
+            const matchesSearch = currentSearchTerm === '' || searchText.includes(currentSearchTerm);
+            
+            if (matchesFilter && matchesSearch) {
+                row.classList.remove('hidden');
+            } else {
+                row.classList.add('hidden');
+            }
+        });
+    }
+}
+
+// ===== NEW: Save/Load Functions =====
+function saveChecklist() {
+    const data = {
+        projectName: document.getElementById("projectName").value,
+        companyName: document.getElementById("companyName").value,
+        contractAmount: document.getElementById("contractAmount").value,
+        contractPeriod: document.getElementById("contractPeriod").value,
+        userQuestion: document.getElementById("userQuestion").value,
+        timestamp: new Date().toISOString()
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `체크리스트_${data.projectName || '저장'}_${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    
+    alert('✅ 현재 상태가 저장되었습니다!');
+}
+
+function loadChecklist() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const data = JSON.parse(event.target.result);
+                
+                document.getElementById("projectName").value = data.projectName || '';
+                document.getElementById("companyName").value = data.companyName || '';
+                document.getElementById("contractAmount").value = data.contractAmount || '50';
+                document.getElementById("contractPeriod").value = data.contractPeriod || '12';
+                document.getElementById("userQuestion").value = data.userQuestion || '';
+                
+                updateSliderValues();
+                updateAndNotify();
+                
+                alert('✅ 저장된 데이터를 불러왔습니다!');
+            } catch (error) {
+                alert('❌ 파일을 읽는 중 오류가 발생했습니다.');
+            }
+        };
+        reader.readAsText(file);
+    };
+    
+    input.click();
+}
+
+// 각 단계별 필수 서류 개수 계산 (기존 함수)
 function calculateRequiredDocuments(step, amount, period) {
     const stepData = checklistData[step];
     if (!stepData) return 0;
@@ -162,7 +353,7 @@ function calculateRequiredDocuments(step, amount, period) {
     return count;
 }
 
-// 모든 단계의 필수 서류 개수 업데이트
+// 모든 단계의 필수 서류 개수 업데이트 (기존 함수)
 function updateDocumentCounts(amount, period) {
     for (let i = 1; i <= 4; i++) {
         const count = calculateRequiredDocuments(i, amount, period);
@@ -177,18 +368,15 @@ function generateAllPages() {
     const amount = parseFloat(document.getElementById("contractAmount").value);
     const period = parseFloat(document.getElementById("contractPeriod").value);
 
-    // 모든 step 렌더링
     for (let i = 1; i <= 4; i++) {
         renderStep(i);
     }
 
-    // 첫 번째 탭만 시각적으로 활성화 (다른 step 콘텐츠는 DOM에 유지)
     for (let i = 1; i <= 4; i++) {
         if (i === 1) {
             document.getElementById(`step${i}`).classList.add('active');
             document.querySelectorAll('.step-tab')[i-1].classList.add('active');
         } else {
-            // active 클래스는 제거하되, innerHTML은 유지됨
             document.getElementById(`step${i}`).classList.remove('active');
             document.querySelectorAll('.step-tab')[i-1].classList.remove('active');
         }
@@ -196,17 +384,14 @@ function generateAllPages() {
 }
 
 function switchStep(step) {
-    // Hide all steps
     for (let i = 1; i <= 4; i++) {
         document.getElementById(`step${i}`).classList.remove('active');
         document.querySelectorAll('.step-tab')[i-1].classList.remove('active');
     }
     
-    // Show selected step
     document.getElementById(`step${step}`).classList.add('active');
     document.querySelectorAll('.step-tab')[step-1].classList.add('active');
     
-    // Generate table for this step
     renderStep(step);
 }
 
@@ -326,12 +511,7 @@ function closeModal() {
 }
 
 function printPage() {
-    // 1. 인쇄 전, 현재 설정된 금액/기간에 맞춰 모든 탭(1~4)의 내용을 강제로 생성합니다.
-    // 기존에 작성하신 generateAllPages() 함수가 이 역할을 완벽히 수행합니다.
     generateAllPages();
-
-    // 2. 브라우저가 내용을 그릴 시간을 아주 잠깐(0.5초) 준 뒤 인쇄 창을 띄웁니다.
-    // (내용이 많으면 그리는 데 시간이 걸릴 수 있어 안전장치를 두는 것입니다)
     setTimeout(() => {
         window.print();
     }, 500);
@@ -357,12 +537,18 @@ function resetForm() {
     document.getElementById("companyName").value = "";
     document.getElementById("contractAmount").value = "50";
     document.getElementById("contractPeriod").value = "12";
+    document.getElementById("userQuestion").value = "";
     updateSliderValues();
-    document.getElementById("tableContainer").innerHTML = `
-        <div class="empty-state">
-            <p>📊 위의 조건을 설정하고 "체크리스트 업데이트" 버튼을 클릭하세요.</p>
-        </div>
-    `;
+    
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById(`step${i}`).innerHTML = `
+            <div class="empty-state">
+                <p>📊 위의 조건을 설정하고 "체크리스트 업데이트" 버튼을 클릭하세요.</p>
+            </div>
+        `;
+    }
+    
+    updateDashboard();
 }
 
 function updateSliderValues() {
@@ -377,7 +563,6 @@ function updateTable() {
     btn.classList.add("loading");
     btn.disabled = true;
 
-    // 약간의 딜레이를 줘서 로딩 UI가 보이도록 함
     setTimeout(() => {
         updateAllSteps();
         
@@ -410,7 +595,6 @@ function validateAndCleanInput(type) {
         
         let val = parseFloat(input.value) || 0.5;
         val = Math.max(0.5, Math.min(36, val));
-        // 0.5 단위로 반올림
         val = Math.round(val * 2) / 2;
         document.getElementById("contractPeriod").value = val;
         document.getElementById("contractPeriodInput").value = val;
@@ -418,13 +602,12 @@ function validateAndCleanInput(type) {
     updateSliderValues();
 }
 
-// Event listeners - blur 이벤트에서만 검증 (입력 중에는 자유롭게)
+// Event listeners
 document.getElementById("contractAmount").addEventListener("input", updateSliderValues);
 document.getElementById("contractPeriod").addEventListener("input", updateSliderValues);
 document.getElementById("contractAmountInput").addEventListener("blur", function() { validateAndCleanInput('amount'); });
 document.getElementById("contractPeriodInput").addEventListener("blur", function() { validateAndCleanInput('period'); });
 
-// Event listeners with debounce for better performance
 let debounceTimer;
 function debouncedUpdate() {
     clearTimeout(debounceTimer);
@@ -458,7 +641,6 @@ window.onclick = function(event) {
     }
 };
 
-// === 이 부분을 추가하세요 ===
 function updateAndNotify() {
     const btn = document.getElementById("updateBtn");
     btn.classList.add("loading");
@@ -471,6 +653,8 @@ function updateAndNotify() {
         
         generateAllPages();
         updateDocumentCounts(amount, period);
+        updateDashboard();
+        applyFilters();
         
         btn.classList.remove("loading");
         btn.disabled = false;
@@ -478,56 +662,34 @@ function updateAndNotify() {
         alert('업데이트 되었습니다.\n제출 서류를 확인해주세요.');
     }, 500);
 }
-// ============================
 
-// Initialize
-document.getElementById("contractAmount").addEventListener("input", updateSliderValues);
-document.getElementById("contractPeriod").addEventListener("input", updateSliderValues);
-updateSliderValues();
-renderStep(1);
-
-// === script.js 맨 아랫부분에 추가 ===
-
-// === script.js 맨 아랫부분에 기존 generateAiGuide 함수를 지우고 아래로 교체하세요 ===
-
-/**
- * 서버 주소를 자동으로 결정하는 함수
- * 1. 본인: 더블클릭(file://) -> 127.0.0.1 (자기자신) 연결
- * 2. 본인/동료: IP접속(http://) -> 접속한 그 IP 그대로 연결
- */
+// ===== AI Guide Functions (기존 코드 유지) =====
 function getServerUrl() {
     const port = '5000';
     const apiPath = '/api/ai-guide';
 
-    // 조건 2 만족: IP 주소를 치고 들어온 경우 (http://10.x.x.x:5000)
-    // window.location.origin은 접속한 IP와 포트를 자동으로 가져옵니다.
     if (window.location.protocol.startsWith('http')) {
         return `${window.location.origin}${apiPath}`;
     }
 
-    // 조건 1 만족: 본인이 파일을 더블클릭해서 연 경우 (file:///...)
-    // 본인 PC에서 서버가 돌고 있으므로 127.0.0.1로 연결합니다.
     return `http://127.0.0.1:${port}${apiPath}`;
 }
 
-// AI 가이드 실행 함수
 async function generateAiGuide() {
     const aiContent = document.getElementById("aiContent");
     const aiGuideBox = document.getElementById("aiGuideBox");
     const btn = document.getElementById("aiGuideBtn");
 
-    // 기본 정보 가져오기
     const projectName = document.getElementById("projectName").value || "미지정 공사";
     const amount = document.getElementById("contractAmount").value;
     const period = document.getElementById("contractPeriod").value;
+    const question = document.getElementById("userQuestion").value;
 
-    // UI 초기화
     btn.innerHTML = "⚡ AI 분석 중...";
     btn.disabled = true;
     aiGuideBox.style.display = "block";
     aiContent.innerHTML = "데이터를 분석 중입니다...";
 
-    // 자동 감지된 서버 주소 사용
     const serverUrl = getServerUrl();
     console.log("요청 서버 주소:", serverUrl);
 
@@ -535,7 +697,7 @@ async function generateAiGuide() {
         const response = await fetch(serverUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ projectName, amount, period })
+            body: JSON.stringify({ projectName, amount, period, question })
         });
 
         const data = await response.json();
@@ -553,3 +715,11 @@ async function generateAiGuide() {
         btn.disabled = false;
     }
 }
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateSliderValues();
+    renderStep(1);
+    setupSearchAndFilter();
+    updateDashboard();
+});
