@@ -46,6 +46,12 @@
                         <div class="value-display">개월</div>
                     </div>
                 </div>
+
+                <!-- 기존 입력창들 아래에 추가 -->
+                <div class="input-group">
+                    <label for="userQuestion">상세 공사내용 및 추가 문의사항</label>
+                    <textarea id="userQuestion" placeholder="예: 크레인 작업이 포함되어 있습니다. 고소 작업 시 안전 수칙을 중점적으로 알려주세요."></textarea>
+                </div>
             </div>
 
             <div class="info-box">
@@ -54,8 +60,18 @@
 
             <div class="button-group">
                 <button class="btn-primary" id="updateBtn" onclick="updateAndNotify()">📊 체크리스트 업데이트</button>
+                
+                <!-- [추가] AI 가이드 버튼 -->
+                <button class="btn-primary" id="aiGuideBtn" style="background: #8b5cf6;" onclick="generateAiGuide()">✨ AI 공사 가이드 (Beta)</button>
+                
                 <button class="btn-print" onclick="printPage()">🖨️ 인쇄&PDF저장</button>
                 <button class="btn-reset" onclick="resetForm()">🔄 초기화</button>
+            </div>
+
+            <!-- [추가] AI 결과를 보여줄 박스 (button-group 바로 아래에 넣으세요) -->
+            <div id="aiGuideBox" class="info-box" style="display: none; background: #f5f3ff; border-left: 4px solid #8b5cf6; margin-top: 20px;">
+                <div style="font-weight: bold; margin-bottom: 10px; color: #5b21b6;">🤖 AI 분석 결과:</div>
+                <div id="aiContent" style="white-space: pre-wrap; font-size: 13.5px; color: #333;"></div>
             </div>
         </div>
 
