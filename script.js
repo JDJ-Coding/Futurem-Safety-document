@@ -4,11 +4,11 @@ const checklistData = {
         title: "Ⅰ. 안전&환경 (자사 기준)",
         items: [
             { name: "유해화학물질 취급 도급신고", status: "●", description: "양극재 공장 필수\n(단독 건물 제외: 전기실, 유틸리티동 등)", exemption: "별도 건물 신축 제외", remark: "자사 양극재 공정과정에서 필수", baseAmount: 0, basePeriod: 0, legal: "화관법 제31조" },
-            { name: "유해화학물질 취급담당자 교육 + MSDS 교육 (통합)", status: "●", description: "교육증 첨부: 온라인 8h + 오프라인 8h 가능\nMSDS 자체 교육 후 서명본 및 MSDS 원본 첨부", exemption: "화학물질 미사용 공사 시 면제", remark: "통합하여 \"화학물질 관리 교육\"으로 통칭 가능\n산안법 제114조(MSDS) + 화관법 제33조(유해화학물질담당자) 동시 충족", baseAmount: 0, basePeriod: 0, legal: "화관법 제33조, 산안법 제114조" },
+            { name: "유해화학물질 취급담당자 교육 + MSDS 교육 (통합)", status: "●", description: "교육증 첨부: 온라인 8h + 오프라인 8h 가능\nMSDS 자체 교육 후 서명본 및 MSDS 원본 첨부", exemption: "화학물질 미사용 공사 시 면제", remark: "통합하여 \"화학물질 관리 교육\"으로 통칭\n산안법 제114조(MSDS) + 화관법 제33조(유해화학물질담당자) 동시 충족", baseAmount: 0, basePeriod: 0, legal: "화관법 제33조, 산안법 제114조" },
             { name: "특별교육(안전보건플랫폼 자료 활용)", status: "●", description: "특정 작업 해당 시 실시 결과보고서", exemption: "해당 공종 없을 시 면제", remark: "자사 양식 활용. 고소작업, 타워크레인 등 특정공종이 포함될 경우 필수", baseAmount: 0, basePeriod: 0, legal: "산안법 제29조" },
             { name: "D-1 회의 참석(일정)", status: "●", description: "작업 전일 회의 참석 기록\n(발주처/정비섹션 주관)", exemption: "해당 없음", remark: "자사 규정에 따른 필수 참석 항목", baseAmount: 0, basePeriod: 0, legal: "사규" },
             { name: "안심건강인증제(건강검진결과)", status: "○", description: "50대 이상 작업자 투입 시\n최근 6개월 내 건강검진 결과지", exemption: "50대 미만만 투입할 경우 면제", remark: "특수건강검진 또는 일반건강검진 인정\n외국인 작업자는 별도 확인", baseAmount: 0, basePeriod: 0, legal: "산안법 제129조" },
-            { name: "보호구역 출입 보안서약서", status: "●", description: "현장 출입 인원 전원 보안 서약서\n(자사 핵심기술 보호)", exemption: "해당 없음", remark: "핵심기술 관련 구역 출입 인원 전수 작성 필수\n자사 규정 양식 사용", baseAmount: 0, basePeriod: 0, legal: "사규" }
+            { name: "보호구역 출입 보안서약서", status: "●", description: "현장 출입 인원 전원 보안 서약서\n(자사 핵심기술 보호)", exemption: "해당 없음", remark: "출입 인원 전수 작성 필수\n자사 규정 양식 사용", baseAmount: 0, basePeriod: 0, legal: "사규" }
         ]
     },
     2: {
@@ -18,7 +18,7 @@ const checklistData = {
             { name: "세부공정표", status: "●", description: "일자별 상세 공정 스케줄\n(Gantt Chart 형식) 및 주요 공종별 시공 순서", exemption: "해당 없음", remark: "타 공종(전기, 소방 등) 간섭 명시 필수\n타이트한 공정은 주간 단위로 작성", baseAmount: 0, basePeriod: 0, legal: "건진법 제62조" },
             { name: "시공 상세도면 및 레이아웃", status: "●", description: "평면도, 단면도, Isometric도 등\n현장 시공도면", exemption: "해당 없음", remark: "발주처 승인도면 기반\n설계변경 시 수정도면 제출 필수", baseAmount: 0, basePeriod: 0, legal: "건진법 제62조" },
             { name: "시공 절차 및 방법서", status: "●", description: "공정별 상세 시공 공법 설명서\n(양극재, 배관 등)", exemption: "해당 없음", remark: "자사 표준 시공법 또는\n발주처 요구 시공법 명시", baseAmount: 0, basePeriod: 0, legal: "건진법 제62조" },
-            { name: "현장 조직도 및 비상연락망", status: "●", description: "현장대리인, 안전관리자,\n품질관리자 등 직책별 비상연락망", exemption: "해당 없음", remark: "24시간 연락 가능한 휴대폰 번호 필수 기재", baseAmount: 0, basePeriod: 0, legal: "산안법 제15, 17조" },
+            { name: "현장 조직도 및 비상연락망", status: "●", description: "현장대리인, 안전관리자,\n품질관리자 등 직책별 비상연락망", exemption: "해당 없음", remark: "24시간 연락 가능한 휴대폰 번호 필수 \n기재", baseAmount: 0, basePeriod: 0, legal: "산안법 제15, 17조" },
             { name: "인력 투입 계획서", status: "●", description: "공종별 인원수 및 자격/숙련도 리스트\n(일용직, 정규직 구분)", exemption: "해당 없음", remark: "투입 예정 기간별 인력현황 표 형식", baseAmount: 0, basePeriod: 0, legal: "산안법 제31조" },
             { name: "장비 투입 계획서 및 제원표", status: "○", description: "투입 장비 목록 및 상세 사양서(카탈로그)\n기술사 확인서 (가설구조물의 경우)", exemption: "장비 미투입(인력 시공만) 시 면제", remark: "타워크레인, 양중기, 고소작업대 등 주요 양중기 포함 시 제조사 카탈로그 필수", baseAmount: 0, basePeriod: 0, legal: "건설기계관리법, 건진법 제62조 제11항" },
             { name: "작업안전분석(JSA) / 위험성평가서", status: "●", description: "단위 작업별 위험요인 및\n감소대책 수립 (공종별 세분화)", exemption: "해당 없음", remark: "자체 양식 활용 가능\n타 공종 간섭 부분 특히 명시", baseAmount: 0, basePeriod: 0, legal: "산안법 제36조" },
