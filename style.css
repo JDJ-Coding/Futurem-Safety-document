@@ -356,7 +356,6 @@ button {
 }
 
 /* Status Badges */
-/* 웹 화면용: 필수 여부 칸 너비 고정 */
 th:nth-child(3), 
 td:nth-child(3) {
     width: 75px !important;
@@ -366,7 +365,6 @@ td:nth-child(3) {
     text-align: center !important;
 }
 
-/* 배지 크기 및 정렬 */
 .status-badge {
     width: 62px !important;
     min-width: 62px !important;
@@ -411,7 +409,6 @@ td:nth-child(3) {
     border-left: 4px solid var(--accent-blue);
 }
 
-/* 테이블 기본 레이아웃 설정 */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -420,25 +417,21 @@ table {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     overflow: hidden;
-    /* 너비 고정을 위해 auto로 설정 */
     table-layout: auto !important;
 }
 
-/* 표 헤더(컬럼 이름) 정렬 설정 */
 th {
     background: #f9fafb;
     border: 1px solid var(--border-gray);
     padding: 12px 10px;
     font-size: 11px;
     font-weight: 700;
-    /* 기존 left에서 center로 변경하여 중앙 정렬 적용 */
     text-align: center !important; 
     color: var(--text-dark);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     word-break: keep-all;
 }
-
 
 td {
     padding: 12px 10px;
@@ -453,14 +446,12 @@ tr:hover {
     background: #f9fafb;
 }
 
-/* No. 숫자가 들어가는 첫 번째 칸 설정 */
 td:first-child {
     text-align: center !important;
     font-weight: 700 !important;
-    color: #000000 !important; /* 가독성을 위해 강조색 추가 선택사항 */
+    color: #000000 !important; 
 }
 
-/* Tooltip for legal basis */
 .legal-tooltip {
     position: relative;
     cursor: help;
@@ -592,7 +583,6 @@ td:first-child {
     background: #f0f9ff;
 }
 
-/* === 인쇄 및 PDF 저장 전용 스타일 시작 === */
 @media print {
     * { 
         -webkit-print-color-adjust: exact !important; 
@@ -602,7 +592,6 @@ td:first-child {
     body { background: white !important; padding: 0 !important; }
     .container { box-shadow: none !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; }
 
-    /* 입력창 가로 2열 고정 */
     .input-grid {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
@@ -610,13 +599,11 @@ td:first-child {
         width: 100% !important;
     }
 
-    /* 입력 섹션 후 페이지 넘김 */
     .input-section {
         page-break-after: always !important;
         border-bottom: none !important;
     }
 
-    /* [핵심] 표의 3번째 칸(필수 여부) 너비 고정 */
     th:nth-child(3), 
     td:nth-child(3) {
         width: 55px !important;
@@ -626,7 +613,6 @@ td:first-child {
         padding: 10px 0 !important;
     }
 
-    /* 인쇄용: 배지 너비 조정 */
     .status-badge {
         width: 50px !important;
         min-width: 50px !important;
@@ -637,12 +623,10 @@ td:first-child {
         white-space: nowrap !important;
     }
 
-    /* 인쇄 시 제외할 요소 */
     .step-nav, .button-group, .reference-btn, .header-right {
         display: none !important;
     }
 
-    /* 각 스텝을 각각의 새 페이지에 표시 */
     .step-content {
         display: block !important;
         page-break-after: always !important;
@@ -650,7 +634,7 @@ td:first-child {
     
     #step4 { page-break-after: auto !important; }
 }
-/* Responsive */
+
 @media (max-width: 768px) {
     .input-grid {
         grid-template-columns: 1fr;
@@ -681,7 +665,6 @@ td:first-child {
     }
 }
 
-/* Info Box */
 .info-box {
     background: #f0f9ff;
     border-left: 4px solid var(--accent-blue);
@@ -703,7 +686,6 @@ td:first-child {
     margin-bottom: 10px;
 }
 
-/* Badge for reference info */
 .reference-badge {
     display: inline-block;
     background: #fef3c7;
@@ -715,7 +697,6 @@ td:first-child {
     margin-left: 8px;
 }
 
-/* Loading state */
 .btn-primary.loading {
     opacity: 0.7;
     cursor: not-allowed;
@@ -743,4 +724,16 @@ td:first-child {
 .btn-primary.loading:hover {
     background: var(--accent-blue);
     transform: none;
+}
+
+/* 엑셀 버튼 전용 스타일 추가 (기존 코드 영향 없음) */
+.btn-excel {
+    background: var(--success-green);
+    color: white;
+    min-width: 140px;
+}
+.btn-excel:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }

@@ -97,8 +97,28 @@ const referenceData = {
     }
 };
 
-// Utility functions - 정합성 검증
+// [수정된 부분] Utility functions - 정합성 검증
 function getStatusDisplay(status, item, amount, period) {
+    // -------------------------------------------------------------
+    // [인터락 로직] 재해예방 기술지도 계약서
+    // 이름에 '기술지도'가 포함되어 있는지 확인
+    // -------------------------------------------------------------
+    if (item.name.indexOf("기술지도") !== -1) {
+        // 1. 공사금액 50억 이상이면 -> 안전관리자 선임 대상이므로 무조건 '면제(미해당)'
+        if (amount >= 50) {
+            return { text: "미해당", class: "exempt" };
+        }
+        
+        // 2. 50억 미만일 때: [1억 이상 AND 1개월 이상] 두 조건을 모두 만족해야 '필수'
+        if (amount >= 1 && period >= 1) {
+            return { text: "필수", class: "required" };
+        }
+        
+        // 3. 그 외(1억 미만 or 1개월 미만) -> '미해당'
+        return { text: "미해당", class: "exempt" };
+    }
+    // -------------------------------------------------------------
+
     // ● = 항상 필수 (조건 없음)
     if (status === "●") {
         return { text: "필수", class: "required" };
@@ -326,12 +346,7 @@ function closeModal() {
 }
 
 function printPage() {
-    // 1. 인쇄 전, 현재 설정된 금액/기간에 맞춰 모든 탭(1~4)의 내용을 강제로 생성합니다.
-    // 기존에 작성하신 generateAllPages() 함수가 이 역할을 완벽히 수행합니다.
     generateAllPages();
-
-    // 2. 브라우저가 내용을 그릴 시간을 아주 잠깐(0.5초) 준 뒤 인쇄 창을 띄웁니다.
-    // (내용이 많으면 그리는 데 시간이 걸릴 수 있어 안전장치를 두는 것입니다)
     setTimeout(() => {
         window.print();
     }, 500);
@@ -377,7 +392,6 @@ function updateTable() {
     btn.classList.add("loading");
     btn.disabled = true;
 
-    // 약간의 딜레이를 줘서 로딩 UI가 보이도록 함
     setTimeout(() => {
         updateAllSteps();
         
@@ -410,7 +424,6 @@ function validateAndCleanInput(type) {
         
         let val = parseFloat(input.value) || 0.5;
         val = Math.max(0.5, Math.min(36, val));
-        // 0.5 단위로 반올림
         val = Math.round(val * 2) / 2;
         document.getElementById("contractPeriod").value = val;
         document.getElementById("contractPeriodInput").value = val;
@@ -418,13 +431,13 @@ function validateAndCleanInput(type) {
     updateSliderValues();
 }
 
-// Event listeners - blur 이벤트에서만 검증 (입력 중에는 자유롭게)
+// Event listeners
 document.getElementById("contractAmount").addEventListener("input", updateSliderValues);
 document.getElementById("contractPeriod").addEventListener("input", updateSliderValues);
 document.getElementById("contractAmountInput").addEventListener("blur", function() { validateAndCleanInput('amount'); });
 document.getElementById("contractPeriodInput").addEventListener("blur", function() { validateAndCleanInput('period'); });
 
-// Event listeners with debounce for better performance
+// Debounced updates
 let debounceTimer;
 function debouncedUpdate() {
     clearTimeout(debounceTimer);
@@ -458,7 +471,6 @@ window.onclick = function(event) {
     }
 };
 
-// === 이 부분을 추가하세요 ===
 function updateAndNotify() {
     const btn = document.getElementById("updateBtn");
     btn.classList.add("loading");
@@ -478,10 +490,48 @@ function updateAndNotify() {
         alert('업데이트 되었습니다.\n제출 서류를 확인해주세요.');
     }, 500);
 }
-// ============================
 
 // Initialize
 document.getElementById("contractAmount").addEventListener("input", updateSliderValues);
 document.getElementById("contractPeriod").addEventListener("input", updateSliderValues);
 updateSliderValues();
 renderStep(1);
+
+// [신규 추가] 엑셀 다운로드 기능
+function downloadExcel() {
+    const amount = parseFloat(document.getElementById("contractAmount").value);
+    const period = parseFloat(document.getElementById("contractPeriod").value);
+    const projectName = document.getElementById("projectName").value || "프로젝트";
+    
+    const excelData = [];
+    
+    for (let i = 1; i <= 4; i++) {
+        const stepData = checklistData[i];
+        stepData.items.forEach((item, index) => {
+            const status = getStatusDisplay(item.status, item, amount, period);
+            
+            excelData.push({
+                "단계": stepData.title,
+                "No": index + 1,
+                "서류명": item.name,
+                "필수여부": status.text,
+                "상세설명": (item.description || "").replace(/\n/g, ' '),
+                "면제조건": (item.exemption || "").replace(/\n/g, ' '),
+                "비고": (item.remark || "").replace(/\n/g, ' '),
+                "근거법령": item.legal || ""
+            });
+        });
+    }
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    
+    ws['!cols'] = [
+        { wch: 25 }, { wch: 5 }, { wch: 35 }, { wch: 10 },
+        { wch: 45 }, { wch: 35 }, { wch: 35 }, { wch: 15 }
+    ];
+
+    XLSX.utils.book_append_sheet(wb, ws, "체크리스트");
+    const today = new Date().toISOString().split('T')[0];
+    XLSX.writeFile(wb, `${projectName}_안전서류체크리스트_${today}.xlsx`);
+}

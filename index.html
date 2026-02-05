@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026년 안전&환경 서류 체크리스트</title>
+    <!-- PDF 라이브러리 (기존) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- 엑셀 라이브러리 (SheetJS) - 신규 추가됨 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -55,6 +58,8 @@
             <div class="button-group">
                 <button class="btn-primary" id="updateBtn" onclick="updateAndNotify()">📊 체크리스트 업데이트</button>
                 <button class="btn-print" onclick="printPage()">🖨️ 인쇄&PDF저장</button>
+                <!-- 엑셀 버튼 추가됨 -->
+                <button class="btn-excel" onclick="downloadExcel()">📥 엑셀 다운로드</button>
                 <button class="btn-reset" onclick="resetForm()">🔄 초기화</button>
             </div>
         </div>
